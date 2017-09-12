@@ -17,6 +17,16 @@ router.get('/', async ctx => {
   await ctx.render('index.html.pug');
 });
 
+const apiRouter = new koaRouter();
+const papersRouter = new koaRouter();
+papersRouter.get('/', async ctx => {
+  ctx.body = { 123: { title: "This is my first paper!" } };
+});
+
+apiRouter.use('/papers', papersRouter.routes());
+router.use('/api', apiRouter.routes());
+
+
 app.use(router.routes());
 
 // Listen!

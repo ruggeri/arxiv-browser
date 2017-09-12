@@ -1,7 +1,7 @@
-import { Map } from 'immutable-js';
+import { Map } from 'immutable';
 import { RECEIVE_PAPER, RECEIVE_PAPERS } from '../actions/paper-actions.js';
 
-const papersReducer = (state = new Map({}), action) => {
+const papersReducer = (state = Map(), action) => {
   switch (action.type) {
   case RECEIVE_PAPER:
     return state.update(action.paper.id, action.paper);
