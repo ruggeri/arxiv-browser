@@ -5,6 +5,7 @@ const koaStatic = require('koa-static');
 const koaViews = require('koa-views');
 
 const app = new koa();
+app.context.models = require('./models');
 
 // Pre-routes middleware!
 app.use(koaViews(__dirname + '/views'));
@@ -20,12 +21,14 @@ router.get('/', async ctx => {
 const apiRouter = new koaRouter();
 const papersRouter = new koaRouter();
 papersRouter.get('/', async ctx => {
-  ctx.body = { 123: { title: "This is my first paper!" } };
+  const paper = await ctx.models.Paper.findOne()
+  ctx.body = {
+    [paper.id]: paper
+  };
 });
 
 apiRouter.use('/papers', papersRouter.routes());
 router.use('/api', apiRouter.routes());
-
 
 app.use(router.routes());
 

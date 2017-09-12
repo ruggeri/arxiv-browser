@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "ruggeri",
+    "password": null,
+    "database": "arxiv_browser_dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
