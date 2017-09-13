@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { RECEIVE_PAPER, RECEIVE_PAPERS } from '../actions/paper-actions.js';
+import { RECEIVE_PAPER, RECEIVE_PAPERS } from '../actions/paper-actions';
 
 const papersReducer = (state = Map(), action) => {
   switch (action.type) {

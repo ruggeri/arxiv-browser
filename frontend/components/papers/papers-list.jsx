@@ -32,7 +32,7 @@ class PapersList extends React.Component {
 
 // Container
 import { connect } from 'react-redux';
-import { fetchPapers } from '../../actions/paper-actions.js';
+import { fetchPapers } from '../../actions/paper-actions';
 
 export default connect(
   (state) => ({
