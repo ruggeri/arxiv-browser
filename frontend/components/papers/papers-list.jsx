@@ -1,5 +1,12 @@
 import React from 'react';
 
+class PaperItem extends React.Component {
+  render() {
+    const { paper } = this.props;
+    return <li>{paper.get('title')}</li>;
+  }
+}
+
 class PapersList extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +18,15 @@ class PapersList extends React.Component {
 
   render() {
     const { papers } = this.props;
-    return <h1>There are {papers.size} papers in the archive!</h1>;
+
+    const paperItems = papers.valueSeq().map(
+      paper => <PaperItem paper={paper} key={paper.get('link')}/>
+    );
+
+    return <div>
+      <h1>There are {papers.size} papers in the archive!</h1>
+      {paperItems}
+    </div>;
   }
 }
 
