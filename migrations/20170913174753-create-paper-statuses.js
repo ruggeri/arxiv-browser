@@ -25,7 +25,7 @@ module.exports = {
           allowNull: false,
           defaultValue: false,
         },
-        isStared: {
+        isStarred: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
           defaultValue: false,
@@ -60,7 +60,7 @@ module.exports = {
           },
           unique: true,
         },
-        isStared: {
+        isStarred: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
           defaultValue: false,

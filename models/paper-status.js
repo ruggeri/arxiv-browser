@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       notNull: true,
     },
-    isStared: {
+    isStarred: {
       type: DataTypes.BOOLEAN,
       notNull: true,
     },

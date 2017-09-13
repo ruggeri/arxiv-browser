@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       notNull: true,
     },
-    isStared: {
+    isStarred: {
       type: DataTypes.BOOLEAN,
       notNull: true,
     },
