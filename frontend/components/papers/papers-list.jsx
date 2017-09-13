@@ -1,10 +1,22 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+class PaperAuthorItem extends React.Component {
+  render() {
+    const { author } = this.props;
+    return (
+      <li>
+        <Link to={`/authors/${author.get('id')}`}>{author.get('name')}</Link>
+      </li>
+    );
+  }
+}
 
 class PaperAuthorsList extends React.Component {
   render() {
     const { authors } = this.props;
     const authorItems = authors.map(
-      a => <li key={a.get('name')}>{a.get('name')}</li>
+      a => <PaperAuthorItem key={a.get('name')} author={a}/>
     );
 
     return (
