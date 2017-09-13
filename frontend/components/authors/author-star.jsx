@@ -5,6 +5,11 @@ class AuthorStar extends React.Component {
   render() {
     const { authorStatus, toggleAuthorStar } = this.props;
 
+    // In case we are are still loading.
+    if (!authorStatus) {
+      return <i className="fa fa-spinnger"></i>;
+    }
+
     const starClassNames = classNames({
       fa: true,
       "fa-star": authorStatus.get('isStarred'),
