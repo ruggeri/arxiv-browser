@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom'
 class AuthoredPaperItem extends React.Component {
   render() {
     const { paper } = this.props;
-    // TODO: generate link later!
-    const url = `/`
+    const url = `/papers/${paper.get('id')}`
     return <Link to={url}>{paper.get('title')}</Link>;
   }
 }

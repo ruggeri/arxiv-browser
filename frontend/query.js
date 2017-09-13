@@ -1,7 +1,6 @@
 import I from 'immutable';
 
 export const authorsByPaperId = (state, papers) => {
-  const authorshipsByPaperId = state.authorships.get('byPaperId');
 
   let paperIds;
   if (I.isAssociative(papers)) {
@@ -12,25 +11,29 @@ export const authorsByPaperId = (state, papers) => {
 
   let authorsByPaperId = I.Map();
   for (const paperId of paperIds) {
-    const authorIds = (
-      authorshipsByPaperId.get(paperId).map(as => as.get('authorId'))
-    );
-    let authorsForPaper = authorIds.map(id => state.authors.get(id));
-    authorsForPaper = authorsForPaper.sortBy(a => a.get('name'));
-
-    authorsByPaperId = authorsByPaperId.merge(
-      I.Map([[paperId, authorsForPaper]])
-    );
+    const authors = authorsForPaperId(state, paperId);
+    authorsByPaperId = authorsByPaperId.set(paperId, authors);
   }
 
   return authorsByPaperId;
 };
 
+export const authorsForPaperId = (state, paperId) => {
+  const authorshipsByPaperId = state.authorships.get('byPaperId');
+  const authorships = authorshipsByPaperId.get(paperId);
+  const authors = authorships.map(
+    as => state.authors.get(as.get('authorId'))
+  ).sortBy(a => a.get('name'));
+
+  return authors;
+}
+
 export const papersForAuthorId = (state, authorId) => {
   const authorshipsByAuthorId = state.authorships.get('byAuthorId');
   const authorships = authorshipsByAuthorId.get(authorId);
-  let papers = authorships.map(as => state.papers.get(as.get('paperId')));
-  papers = papers.sortBy(p => p.get('publicationDateTime'));
+  const papers = authorships.map(
+    as => state.papers.get(as.get('paperId'))
+  ).sortBy(p => p.get('publicationDateTime'));
 
   return papers
 };

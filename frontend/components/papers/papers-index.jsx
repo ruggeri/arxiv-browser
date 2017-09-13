@@ -27,9 +27,11 @@ class PaperAuthorsList extends React.Component {
 class PaperItem extends React.Component {
   render() {
     const { paper, authors } = this.props;
+    const url = `/papers/${paper.get('id')}`
+
     return (
       <div>
-        {paper.get('title')}
+        <Link to={url}>{paper.get('title')}</Link>
         <PaperAuthorsList authors={authors}/>
       </div>
     );
