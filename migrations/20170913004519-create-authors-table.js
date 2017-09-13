@@ -5,13 +5,9 @@ module.exports = {
     await queryInterface.createTable(
       'authors',
       {
-        id: {
-          type: Sequelize.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-        },
         name: {
           type: Sequelize.STRING,
+          primaryKey: true,
           allowNull: false,
           unique: true,
         },
@@ -30,6 +26,11 @@ module.exports = {
     await queryInterface.createTable(
       'authorships',
       {
+        id: {
+          type: Sequelize.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
         paperLink: {
           type: Sequelize.STRING(1024),
           allowNull: false,
