@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import PaperStar from './paper-star.jsx';
 
 class AuthorItem extends React.Component {
   render() {
@@ -31,8 +32,8 @@ class PaperShow extends React.Component {
   }
 
   render() {
-    let { paper, authors } = this.props;
-    
+    let { authors, paper, paperStatus } = this.props;
+
     if (!paper) {
       return (
         <div>Loading!</div>
@@ -41,7 +42,10 @@ class PaperShow extends React.Component {
 
     return (
       <div>
-        <h1>{paper.get('title')}</h1>
+        <h1>
+          {paper.get('title')}
+          <PaperStar paperStatus={paperStatus}/>
+        </h1>
         <AuthorsList authors={authors}/>
       </div>
     );
@@ -60,7 +64,8 @@ export default connect(
     return {
       paper: state.papers.get(paperId),
       paperId: paperId,
-      authors: authorsForPaperId(state, paperId)
+      paperStatus: state.paperStatuses.get(paperId),
+      authors: authorsForPaperId(state, paperId),
     };
   },
   (dispatch) => ({

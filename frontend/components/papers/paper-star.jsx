@@ -5,6 +5,11 @@ class PaperStar extends React.Component {
   render() {
     const { paperStatus, togglePaperStar } = this.props;
 
+    // In case we are are still loading.
+    if (!paperStatus) {
+      return <i className="fa fa-spinner"></i>;
+    }
+
     const starClassNames = classNames({
       fa: true,
       "fa-star": paperStatus.get('isStarred'),

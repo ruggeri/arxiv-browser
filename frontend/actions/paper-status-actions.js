@@ -12,5 +12,5 @@ export const togglePaperStar = (paperId) => async (dispatch) => {
 
 export const receivePaperStatuses = (paperStatuses) => ({
   type: RECEIVE_PAPER_STATUSES,
-  paperStatuses: paperStatuses
+  paperStatuses: paperStatuses,
 });

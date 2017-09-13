@@ -23,7 +23,9 @@ export const fetchPaper = (paperId) => async (dispatch) => {
   dispatch(batchActions([
     receiveAuthors(response.authors),
     receiveAuthorships(response.authorships),
+    receiveAuthorStatuses(response.authorStatuses),
     receivePapers(response.papers),
+    receivePaperStatuses(response.paperStatuses),
   ]));
 }
 

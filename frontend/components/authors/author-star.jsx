@@ -7,7 +7,7 @@ class AuthorStar extends React.Component {
 
     // In case we are are still loading.
     if (!authorStatus) {
-      return <i className="fa fa-spinnger"></i>;
+      return <i className="fa fa-spinner"></i>;
     }
 
     const starClassNames = classNames({
