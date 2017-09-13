@@ -37,6 +37,17 @@ papersRouter.get('/:paperId', async ctx => {
   );
 
   await buildResponse(ctx, papers);
-})
+});
+
+papersRouter.post('/:paperId/paperStatus/toggleStar', async ctx => {
+  const paperStatus = await ctx.models.PaperStatus.findOne({
+    where: {paperId: ctx.params.paperId}
+  });
+
+  paperStatus.isStarred = !paperStatus.isStarred;
+  await paperStatus.save();
+
+  ctx.body = paperStatus;
+});
 
 module.exports = papersRouter;

@@ -1,7 +1,6 @@
 import I from 'immutable';
 
 export const authorsByPaperId = (state, papers) => {
-
   let paperIds;
   if (I.isAssociative(papers)) {
     paperIds = papers.keySeq();
