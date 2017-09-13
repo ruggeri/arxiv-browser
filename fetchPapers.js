@@ -1,5 +1,6 @@
 const feedParser = require('feedparser');
 const request = require('request');
+const models = require('./models');
 
 const BASE_URL = 'http://export.arxiv.org/api/query';
 const CATEGORIES = [
@@ -36,17 +37,64 @@ async function fetchResults(startIndex, maxResults) {
   return await promise;
 }
 
-function printResults(results) {
-  results.forEach(result => {
-    console.log(result.title);
-    console.log(`Num authors: ${result["atom:author"].length}`);
+async function parseAuthor(tx, authorJSON) {
+  const name = authorJSON["name"]["#"];
+
+  let author = await models.Author.findOne(
+    {where: {name: name}}, {transaction: tx}
+  );
+  if (author) {
+    return author;
+  }
+
+  // Else we need to add this author!
+  author = await models.Author.findOrCreate({
+    where: {name: name}
+  }, {transaction: tx});
+  console.log(`Added author ${name} to the DB!`);
+
+  return author;
+}
+
+async function parseAuthors(tx, paperJSON) {
+  const authors = paperJSON["atom:author"].map(
+    async authorJSON => await parseAuthor(tx, authorJSON)
+  );
+
+  return authors;
+}
+
+async function parsePaper(tx, paperJSON) {
+  const link = paperJSON.link;
+
+  let paper = await models.Paper.findOne(
+    {where: {link: link}}, {transaction: tx}
+  );
+  if (paper) {
+    console.log(`Skipping already processed paper: ${link}`);
+    return;
+  }
+
+  // Else we need to build a new paper!
+  paper = new models.Paper({
+    link: paperJSON.link,
+    title: paperJSON.title,
+    summary: paperJSON.summary,
+    updateDateTime: paperJSON["atom:updated"]["#"],
+    publicationDateTime: paperJSON["atom:published"]["#"],
   });
+
+  await parseAuthors(tx, paperJSON["atom:author"]);
+  await paper.save();
+  console.log(`Added paper ${link} to the DB!`);
 }
 
 async function main(startIndex, maxResults) {
   try {
-    const results = await fetchResults(startIndex, maxResults)
-    printResults(results);
+    await models.sequelize.transaction(async tx => {
+      const papersJSON = await fetchResults(startIndex, maxResults)
+      papersJSON.forEach(async paperJSON => await parsePaper(tx, paperJSON));
+    });
   } catch (err) {
     console.log(err);
   }

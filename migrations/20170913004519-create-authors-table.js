@@ -5,17 +5,24 @@ module.exports = {
     await queryInterface.createTable(
       'authors',
       {
+        id: {
+          type: Sequelize.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
         name: {
           type: Sequelize.STRING,
-          primaryKey: true,
-          allowNull: false
+          allowNull: false,
+          unique: true,
         },
 
         createdAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
         updatedAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
       }
     );
@@ -29,7 +36,7 @@ module.exports = {
           references: {
             model: 'papers',
             key: 'link',
-          }
+          },
         },
         authorName: {
           type: Sequelize.STRING,
@@ -37,17 +44,24 @@ module.exports = {
           references: {
             model: 'authors',
             key: 'name',
-          }
+          },
         },
 
         createdAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
         updatedAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
       }
     );
+
+    await queryInterface.addConstraint('authorships', ['paperLink', 'authorName'], {
+      type: 'unique',
+      name: 'paperLinkAuthorNameUniqueConstraint',
+    });
   },
 
   down: async (queryInterface, Sequelize) => {

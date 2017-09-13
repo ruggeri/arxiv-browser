@@ -15,20 +15,25 @@ module.exports = {
           allowNull: false,
         },
         summary: {
-          type: Sequelize.TEXT
+          type: Sequelize.TEXT,
+          allowNull: false,
         },
         updateDateTime: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
         publicationDateTime: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
 
         createdAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
         updatedAt: {
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          allowNull: false,
         },
       }
     );
