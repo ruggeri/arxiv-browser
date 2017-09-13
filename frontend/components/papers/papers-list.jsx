@@ -1,5 +1,16 @@
 import React from 'react';
 
+class PaperAuthorsList extends React.Component {
+  render() {
+    const { authors } = this.props;
+    const authorItems = authors.map(a => <li>{author.name}</li>);
+
+    return <ul>
+      {authorItems}
+    </ul>;
+  }
+}
+
 class PaperItem extends React.Component {
   render() {
     const { paper } = this.props;
