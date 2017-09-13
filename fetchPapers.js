@@ -37,38 +37,46 @@ async function fetchResults(startIndex, maxResults) {
   return await promise;
 }
 
-async function parseAuthor(tx, authorJSON) {
-  const name = authorJSON["name"]["#"];
+async function createAuthor(tx, authorJSON) {
+  const authorAttrs = {
+    name: authorJSON["name"]["#"]
+  }
 
-  const [author, didCreate] = await models.Author.findOrCreate({
-    where: {name: name},
+  let [author, didCreate] = [await models.Author.findOne({
+    where: {name: authorAttrs.name},
     transaction: tx
-  });
+  }), false];
+  if (!author) {
+    [author, didCreate] = [new models.Author(), true];
+  }
+
+  author.set(authorAttrs);
+  await author.save({transaction: tx});
+
+  await createAuthorStatus(tx, author);
 
   if (didCreate) {
-    console.log(`Added author ${name} to the DB!`);
+    console.log(`Added author ${author.name} to the DB!`);
   }
 
   return author;
 }
 
-async function parseAuthors(tx, authorsJSON) {
+async function createAuthors(tx, authorsJSON) {
   if (!Array.isArray(authorsJSON)) {
     // This happens when there is a sole author I think.
-    return parseAuthors(tx, [authorsJSON]);
+    return await createAuthors(tx, [authorsJSON]);
   }
 
-  console.log(authorsJSON)
-  const authors = await Promise.all(
-    authorsJSON.map(
-      async authorJSON => await parseAuthor(tx, authorJSON)
-    )
-  );
+  const authors = [];
+  for (authorJSON of authorsJSON) {
+    authors.push(await createAuthor(tx, authorJSON));
+  }
 
   return authors;
 }
 
-async function parseAuthorships(tx, paper, authors) {
+async function createAuthorships(tx, paper, authors) {
   for (author of authors) {
     await models.Authorship.findOrCreate({
       where: {paperId: paper.id, authorId: author.id},
@@ -77,28 +85,49 @@ async function parseAuthorships(tx, paper, authors) {
   }
 }
 
-async function parsePaper(tx, paperJSON) {
-  const link = paperJSON.link;
+async function createPaperStatus(tx, paper) {
+  await models.PaperStatus.findOrCreate({
+    where: {paperId: paper.id},
+    defaults: {isArchived: false, isStarred: false},
+    transaction: tx,
+  });
+}
 
-  let paper = await models.Paper.findOne(
-    {where: {link: link}}, {transaction: tx}
-  );
+async function createAuthorStatus(tx, author) {
+  await models.AuthorStatus.findOrCreate({
+    where: {authorId: author.id},
+    defaults: {isStarred: false},
+    transaction: tx,
+  });
+}
+
+async function createPaper(tx, paperJSON) {
+  const paperAttrs = {
+    link: paperJSON.link,
+    title: paperJSON.title,
+    summary: paperJSON.summary,
+    updateDateTime: paperJSON["atom:updated"]["#"],
+    publicationDateTime: paperJSON["atom:published"]["#"],
+  };
+
+  let [paper, didCreate] = [await models.Paper.findOne({
+    where: {link: paperAttrs.link},
+    transaction: tx,
+  }), false];
   if (!paper) {
     // Else we need to build a new paper!
-    paper = new models.Paper({
-      link: paperJSON.link,
-      title: paperJSON.title,
-      summary: paperJSON.summary,
-      updateDateTime: paperJSON["atom:updated"]["#"],
-      publicationDateTime: paperJSON["atom:published"]["#"],
-    });
+    [paper, didCreate] = [new models.Paper(), true];
   }
+  paper.set(paperAttrs);
+  await paper.save({transaction: tx});
+  await createPaperStatus(tx, paper);
 
-  const authors = await parseAuthors(tx, paperJSON["atom:author"]);
-  await paper.save();
-  await parseAuthorships(tx, paper, authors);
+  const authors = await createAuthors(tx, paperJSON["atom:author"]);
+  await createAuthorships(tx, paper, authors);
 
-  console.log(`Added paper ${link} to the DB!`);
+  if (didCreate) {
+    console.log(`Added paper ${paper.link} to the DB!`);
+  }
 }
 
 async function main(startIndex, maxResults) {
@@ -106,7 +135,7 @@ async function main(startIndex, maxResults) {
     await models.sequelize.transaction(async tx => {
       const papersJSON = await fetchResults(startIndex, maxResults);
       for (paperJSON of papersJSON) {
-        await parsePaper(tx, paperJSON);
+        await createPaper(tx, paperJSON);
       }
     });
   } catch (err) {

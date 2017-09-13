@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Authorship = sequelize.define("Authorship", {
+  const PaperStatus = sequelize.define("PaperStatus", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -9,13 +9,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       notNull: true,
     },
-    authorId: {
-      type: DataTypes.INTEGER,
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      notNull: true,
+    },
+    isStared: {
+      type: DataTypes.BOOLEAN,
       notNull: true,
     },
   }, {
-    tableName: "authorships",
+    tableName: "paperStatuses",
   });
 
-  return Authorship;
+  return PaperStatus;
 }
