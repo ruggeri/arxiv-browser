@@ -1,16 +1,21 @@
+import { batchActions } from 'redux-batched-actions';
+
 import { receiveAuthors } from './author-actions';
 import { receiveAuthorships } from './authorship-actions';
+import { receiveAuthorStatuses } from './author-status-actions';
+import { receivePaperStatuses } from './paper-status-actions';
 
-export const RECEIVE_PAPER = 'RECEIVE_PAPER';
 export const RECEIVE_PAPERS = 'RECEIVE_PAPERS';
 
 export const fetchAllPapers = () => async (dispatch) => {
   const response = await (await fetch('/api/papers')).json();
-  dispatch([
+  dispatch(batchActions([
     receiveAuthors(response.authors),
     receiveAuthorships(response.authorships),
+    receiveAuthorStatuses(response.authorStatuses),
     receivePapers(response.papers),
-  ]);
+    receivePaperStatuses(response.paperStatuses),
+  ]));
 };
 
 export const fetchPaper = (paperId) => async (dispatch) => {
@@ -21,11 +26,6 @@ export const fetchPaper = (paperId) => async (dispatch) => {
     receivePapers(response.papers),
   ]);
 }
-
-export const receivePaper = (paper) => ({
-  type: RECEIVE_PAPER,
-  paper: paper,
-});
 
 export const receivePapers = (papers) => ({
   type: RECEIVE_PAPERS,
