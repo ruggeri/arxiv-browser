@@ -18,26 +18,34 @@ module.exports = [{
   },
 
   output: {
-    path: path.join(__dirname, 'static'),
+    path: path.join(__dirname, 'static/build'),
     filename: 'bundle.js',
   },
 
   devtool: 'source-map',
 }, {
-  entry: './assets/app.scss',
+  entry: './assets/style.js',
 
   module: {
     loaders: [
+      { test: /\.css/,
+        loader: ['style-loader', 'css-loader']
+      },
       {
         test: /\.scss/,
         exclude: /node_modules/,
         loader: ['style-loader', 'css-loader', 'sass-loader']
-      }
+      },
+      {
+        test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
+        loader: "file-loader",
+        options: { publicPath: "/static/build/" }
+      },
     ]
   },
 
   output: {
-    path: path.join(__dirname, 'static'),
+    path: path.join(__dirname, 'static/build'),
     filename: 'style.js'
   },
 
