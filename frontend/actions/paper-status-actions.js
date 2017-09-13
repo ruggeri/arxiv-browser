@@ -1,10 +1,12 @@
 export const RECEIVE_PAPER_STATUSES = 'RECEIVE_PAPER_STATUSES';
 
-export const togglePaperStar = (paperStatus) => async (dispatch) => {
-  const response = await (await fetch({
-    url: `/api/papers/${paperStatus.paperId}/paperStatus/toggleStar`,
+export const togglePaperStar = (paperId) => async (dispatch) => {
+  const request = new Request(
+    `/api/papers/${paperId}/paperStatus/toggleStar`, {
     method: "POST",
-  })).json();
+  });
+
+  const response = await (await fetch(request)).json();
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 

@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PaperStar from './paper-star.jsx';
 
 class PaperAuthorItem extends React.Component {
   render() {
@@ -21,22 +21,6 @@ class PaperAuthorsList extends React.Component {
 
     return (
       <ul className="paper-author-list">{authorItems}</ul>
-    );
-  }
-}
-
-class PaperStar extends React.Component {
-  render() {
-    const { paperStatus } = this.props;
-
-    let starClassNames = classNames({
-      fa: true,
-      "fa-star": paperStatus.get('isStarred'),
-      "fa-star-o": !paperStatus.get('isStarred'),
-    });
-
-    return (
-      <i className={starClassNames}></i>
     );
   }
 }

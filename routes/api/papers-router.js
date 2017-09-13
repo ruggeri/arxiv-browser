@@ -47,7 +47,7 @@ papersRouter.post('/:paperId/paperStatus/toggleStar', async ctx => {
   paperStatus.isStarred = !paperStatus.isStarred;
   await paperStatus.save();
 
-  ctx.body = paperStatus;
+  ctx.body = {paperStatus: paperStatus};
 });
 
 module.exports = papersRouter;
