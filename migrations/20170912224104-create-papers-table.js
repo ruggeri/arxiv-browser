@@ -5,14 +5,23 @@ module.exports = {
     return queryInterface.createTable(
       'papers',
       {
-        id: {
-          type: Sequelize.STRING,
+        link: {
+          type: Sequelize.STRING(1024),
           primaryKey: true,
           allowNull: false,
         },
         title: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(1024),
           allowNull: false,
+        },
+        summary: {
+          type: Sequelize.TEXT
+        },
+        updateDateTime: {
+          type: Sequelize.DATE
+        },
+        publicationDateTime: {
+          type: Sequelize.DATE
         },
 
         createdAt: {
