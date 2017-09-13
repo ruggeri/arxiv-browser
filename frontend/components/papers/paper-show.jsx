@@ -45,7 +45,7 @@ class PaperShow extends React.Component {
 // Container
 import { connect } from 'react-redux';
 import { authorsForPaperId } from '../../query';
-import { fetchAuthor } from '../../actions/author-actions';
+import { fetchPaper } from '../../actions/paper-actions';
 
 export default connect(
   (state, ownProps) => {
@@ -57,6 +57,6 @@ export default connect(
     };
   },
   (dispatch) => ({
-    fetchPaper: (authorId) => dispatch(fetchPaper(paperId)),
+    fetchPaper: (paperId) => dispatch(fetchPaper(paperId)),
   }),
 )(PaperShow);

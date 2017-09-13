@@ -1,25 +1,35 @@
 const koaRouter = require('koa-router');
 
-const papersRouter = new koaRouter();
-papersRouter.get('/', async ctx => {
-  // TODO: eventually I will want to paginate this...
-  ctx.body = {
-    papers: {},
-    authorships: {},
-    authors: {},
-  };
+async function buildResponse(ctx, papers) {
+  ctx.body = {};
 
-  ctx.body.papers = await ctx.models.Paper.findAll(
-    {order: [['publicationDateTime', 'DESC']]}
-  );
+  ctx.body.papers = papers;
 
   ctx.body.authorships = await ctx.models.Authorship.findAll(
-    {where: {paperId: {$in: ctx.body.papers.map(p => p.id)}}}
+    {where: {paperId: {$in: papers.map(p => p.id)}}}
   );
 
   ctx.body.authors = await ctx.models.Author.findAll(
     {where: {id: {$in: ctx.body.authorships.map(as => as.authorId)}}}
   );
+}
+
+const papersRouter = new koaRouter();
+papersRouter.get('/', async ctx => {
+  // TODO: eventually I will want to paginate this...
+  const papers = await ctx.models.Paper.findAll(
+    {order: [['publicationDateTime', 'DESC']]}
+  );
+
+  await buildResponse(ctx, papers);
 });
+
+papersRouter.get('/:paperId', async ctx => {
+  const papers = await ctx.models.Paper.findAll(
+    {where: {id: ctx.params.paperId}}
+  );
+
+  await buildResponse(ctx, papers);
+})
 
 module.exports = papersRouter;

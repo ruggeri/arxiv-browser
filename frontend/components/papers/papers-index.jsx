@@ -44,7 +44,7 @@ class PapersIndex extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchPapers();
+    this.props.fetchAllPapers();
   }
 
   render() {
@@ -74,7 +74,7 @@ class PapersIndex extends React.Component {
 // Container
 import { connect } from 'react-redux';
 import { authorsByPaperId } from '../../query';
-import { fetchPapers } from '../../actions/paper-actions';
+import { fetchAllPapers } from '../../actions/paper-actions';
 
 export default connect(
   (state) => ({
@@ -82,6 +82,6 @@ export default connect(
     authorsByPaperId: authorsByPaperId(state, state.papers),
   }),
   (dispatch) => ({
-    fetchPapers: () => dispatch(fetchPapers()),
+    fetchAllPapers: () => dispatch(fetchAllPapers()),
   }),
 )(PapersIndex);
