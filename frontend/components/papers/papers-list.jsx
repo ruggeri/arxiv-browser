@@ -3,7 +3,9 @@ import React from 'react';
 class PaperAuthorsList extends React.Component {
   render() {
     const { authors } = this.props;
-    const authorItems = authors.map(a => <li key={a.get('name')}>{a.get('name')}</li>);
+    const authorItems = authors.map(
+      a => <li key={a.get('name')}>{a.get('name')}</li>
+    );
 
     return (
       <ul>{authorItems}</ul>
