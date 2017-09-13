@@ -35,11 +35,11 @@ class PapersList extends React.Component {
   }
 
   render() {
-    const { papers, authorsByPaperLinks } = this.props;
+    const { papers, authorsByPaperId } = this.props;
 
     const paperItems = papers.valueSeq().map(paper => {
       const authors = (
-        authorsByPaperLinks.get(paper.get('link'))
+        authorsByPaperId.get(paper.get('id'))
       );
 
       return (
@@ -58,13 +58,13 @@ class PapersList extends React.Component {
 
 // Container
 import { connect } from 'react-redux';
-import { authorsByPaperLinks } from '../../query';
+import { authorsByPaperId } from '../../query';
 import { fetchPapers } from '../../actions/paper-actions';
 
 export default connect(
   (state) => ({
     papers: state.papers,
-    authorsByPaperLinks: authorsByPaperLinks(state, state.papers),
+    authorsByPaperId: authorsByPaperId(state, state.papers),
   }),
   (dispatch) => ({
     fetchPapers: () => dispatch(fetchPapers()),

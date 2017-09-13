@@ -14,11 +14,11 @@ papersRouter.get('/', async ctx => {
   );
 
   ctx.body.authorships = await ctx.models.Authorship.findAll(
-    {where: {paperLink: {$in: ctx.body.papers.map(p => p.link)}}}
+    {where: {paperId: {$in: ctx.body.papers.map(p => p.id)}}}
   );
 
   ctx.body.authors = await ctx.models.Author.findAll(
-    {where: {name: {$in: ctx.body.authorships.map(as => as.authorName)}}}
+    {where: {id: {$in: ctx.body.authorships.map(as => as.authorId)}}}
   );
 });
 

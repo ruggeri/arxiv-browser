@@ -69,10 +69,9 @@ async function parseAuthors(tx, authorsJSON) {
 }
 
 async function parseAuthorships(tx, paper, authors) {
-  debugger
   for (author of authors) {
     await models.Authorship.findOrCreate({
-      where: {paperLink: paper.link, authorName: author.name},
+      where: {paperId: paper.id, authorId: author.id},
       transaction: tx
     });
   }

@@ -1,26 +1,26 @@
 import I from 'immutable';
 
-export const authorsByPaperLinks = (state, papers) => {
-  const authorshipsByPaperLink = state.authorships.get('byPaperLink');
+export const authorsByPaperId = (state, papers) => {
+  const authorshipsByPaperId = state.authorships.get('byPaperId');
 
-  let paperLinks;
+  let paperIds;
   if (I.isAssociative(papers)) {
-    paperLinks = papers.keySeq();
+    paperIds = papers.keySeq();
   } else {
-    paperLinks = papers;
+    paperIds = papers;
   }
 
-  let authorsByPaperLinks = I.Map();
-  for (const paperLink of paperLinks) {
-    const authorNames = (
-      authorshipsByPaperLink.get(paperLink).map(as => as.get('authorName'))
+  let authorsByPaperId = I.Map();
+  for (const paperId of paperIds) {
+    const authorIds = (
+      authorshipsByPaperId.get(paperId).map(as => as.get('authorId'))
     );
-    const authorsForLink = authorNames.map(an => state.authors.get(an));
+    const authorsForPaper = authorIds.map(id => state.authors.get(id));
 
-    authorsByPaperLinks = (
-      authorsByPaperLinks.merge({[paperLink]: authorsForLink})
+    authorsByPaperId = authorsByPaperId.merge(
+      I.Map([[paperId, authorsForPaper]])
     );
   }
 
-  return authorsByPaperLinks;
+  return authorsByPaperId;
 };

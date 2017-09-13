@@ -2,8 +2,8 @@ import { Map, Set } from 'immutable';
 import { RECEIVE_AUTHORSHIPS } from '../actions/authorship-actions';
 
 const emptyAuthorshipsState = Map({
-  byPaperLink: Map(),
-  byAuthorName: Map(),
+  byPaperId: Map(),
+  byAuthorId: Map(),
 });
 
 const authorshipsReducer = (state = emptyAuthorshipsState, action) => {
@@ -11,12 +11,12 @@ const authorshipsReducer = (state = emptyAuthorshipsState, action) => {
   case RECEIVE_AUTHORSHIPS:
     for (let authorship of action.authorships) {
       state = state.mergeDeep({
-        byPaperLink: {
-          [authorship.paperLink]: Set([Map(authorship)]),
-        },
-        byAuthorName: {
-          [authorship.authorName]: Set([Map(authorship)]),
-        },
+        byPaperId: Map([
+          [authorship.paperId, Set([Map(authorship)])]
+        ]),
+        byAuthorId: Map([
+          [authorship.authorId, Set([Map(authorship)])]
+        ]),
       });
     }
   }

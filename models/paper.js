@@ -1,8 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const Paper = sequelize.define("Paper", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     link: {
       type: DataTypes.STRING,
-      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,

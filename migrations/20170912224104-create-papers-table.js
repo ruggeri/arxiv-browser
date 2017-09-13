@@ -5,10 +5,16 @@ module.exports = {
     return queryInterface.createTable(
       'papers',
       {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
         link: {
           type: Sequelize.STRING(1024),
-          primaryKey: true,
           allowNull: false,
+          unique: true,
         },
         title: {
           type: Sequelize.STRING(1024),

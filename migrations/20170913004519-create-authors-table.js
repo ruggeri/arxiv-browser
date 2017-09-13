@@ -5,9 +5,14 @@ module.exports = {
     await queryInterface.createTable(
       'authors',
       {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+        },
         name: {
           type: Sequelize.STRING,
-          primaryKey: true,
           allowNull: false,
           unique: true,
         },
@@ -28,23 +33,24 @@ module.exports = {
       {
         id: {
           type: Sequelize.INTEGER,
+          allowNull: false,
           autoIncrement: true,
           primaryKey: true,
         },
-        paperLink: {
-          type: Sequelize.STRING(1024),
+        paperId: {
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'papers',
-            key: 'link',
+            key: 'id',
           },
         },
-        authorName: {
-          type: Sequelize.STRING,
+        authorId: {
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'authors',
-            key: 'name',
+            key: 'id',
           },
         },
 
@@ -59,9 +65,9 @@ module.exports = {
       }
     );
 
-    await queryInterface.addConstraint('authorships', ['paperLink', 'authorName'], {
+    await queryInterface.addConstraint('authorships', ['paperId', 'authorId'], {
       type: 'unique',
-      name: 'paperLinkAuthorNameUniqueConstraint',
+      name: 'paperIdAuthorIdUniqueConstraint',
     });
   },
 

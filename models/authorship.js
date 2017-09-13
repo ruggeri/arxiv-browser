@@ -1,11 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
   const Authorship = sequelize.define("Authorship", {
-    paperLink: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    paperId: {
+      type: DataTypes.INTEGER,
       notEmpty: true,
     },
-    authorName: {
-      type: DataTypes.STRING,
+    authorId: {
+      type: DataTypes.INTEGER,
       notEmpty: true,
     },
   }, {
