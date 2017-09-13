@@ -6,9 +6,11 @@ export const RECEIVE_PAPERS = 'RECEIVE_PAPERS';
 
 export const fetchPapers = () => async (dispatch) => {
   const response = await (await fetch('/api/papers')).json();
-  dispatch(receivePapers(response.papers));
-  dispatch(receiveAuthorships(response.authorships));
-  dispatch(receiveAuthors(response.authors));
+  dispatch([
+    receiveAuthors(response.authors),
+    receiveAuthorships(response.authorships),
+    receivePapers(response.papers),
+  ]);
 };
 
 export const receivePaper = (paper) => ({

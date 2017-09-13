@@ -12,10 +12,10 @@ const authorshipsReducer = (state = emptyAuthorshipsState, action) => {
     for (let authorship of action.authorships) {
       state = state.mergeDeep({
         byPaperLink: {
-          [authorship.paperLink]: Set([authorship]),
+          [authorship.paperLink]: Set([Map(authorship)]),
         },
         byAuthorName: {
-          [authorship.authorName]: Set([authorship]),
+          [authorship.authorName]: Set([Map(authorship)]),
         },
       });
     }
