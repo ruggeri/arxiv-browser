@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import AuthorStar from './author-star.jsx';
 
 class AuthoredPaperItem extends React.Component {
   render() {
@@ -31,7 +32,7 @@ class AuthorShow extends React.Component {
   }
 
   render() {
-    const { author, papers } = this.props;
+    const { author, authorStatus, papers } = this.props;
 
     if (!author) {
       return (
@@ -41,7 +42,10 @@ class AuthorShow extends React.Component {
 
     return (
       <div>
-        <h1>{author.get('name')}</h1>
+        <h1>
+          {author.get('name')}
+          <AuthorStar authorStatus={authorStatus}/>
+        </h1>
         <AuthoredPapersList papers={papers}/>
       </div>
     );
@@ -59,6 +63,7 @@ export default connect(
     
     return {
       author: state.authors.get(authorId),
+      authorStatus: state.authorStatuses.get(authorId),
       authorId: authorId,
       papers: papersForAuthorId(state, authorId)
     };

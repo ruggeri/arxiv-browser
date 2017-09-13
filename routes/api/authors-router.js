@@ -31,4 +31,15 @@ authorsRouter.get('/:authorId', async ctx => {
   );
 });
 
+authorsRouter.post('/:authorId/authorStatus/toggleStar', async ctx => {
+  const authorStatus = await ctx.models.AuthorStatus.findOne({
+    where: {authorId: ctx.params.authorId}
+  });
+
+  authorStatus.isStarred = !authorStatus.isStarred;
+  await authorStatus.save();
+
+  ctx.body = {authorStatus: authorStatus};
+});
+
 module.exports = authorsRouter;
