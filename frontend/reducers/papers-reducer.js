@@ -5,9 +5,7 @@ const papersReducer = (state = Map(), action) => {
   switch (action.type) {
   case RECEIVE_PAPERS:
     for (let paper of action.papers) {
-      state = state.merge(
-        Map([[paper.id, Map(paper)]])
-      );
+      state = state.set(paper.id, Map(paper));
     }
   }
 

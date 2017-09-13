@@ -5,9 +5,7 @@ const authorStatusesReducer = (state = Map(), action) => {
   switch (action.type) {
   case RECEIVE_AUTHOR_STATUSES:
     for (let authorStatus of action.authorStatuses) {
-      state = state.merge(
-        Map([[authorStatus.authorId, Map(authorStatus)]])
-      );
+      state = state.set(authorStatus.authorId, Map(authorStatus));
     }
   }
 
