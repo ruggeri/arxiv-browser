@@ -27,11 +27,17 @@ class AuthorsList extends React.Component {
 
 class PaperShow extends React.Component {
   componentDidMount() {
-    this.props.fetchPaper(this.props.paper.get('id'));
+    this.props.fetchPaper(this.props.paperId);
   }
 
   render() {
-    const { paper, authors } = this.props;
+    let { paper, authors } = this.props;
+    
+    if (!paper) {
+      return (
+        <div>Loading!</div>
+      );
+    }
 
     return (
       <div>
@@ -53,6 +59,7 @@ export default connect(
     
     return {
       paper: state.papers.get(paperId),
+      paperId: paperId,
       authors: authorsForPaperId(state, paperId)
     };
   },

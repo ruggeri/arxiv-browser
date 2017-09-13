@@ -20,20 +20,20 @@ export const authorsByPaperId = (state, papers) => {
 
 export const authorsForPaperId = (state, paperId) => {
   const authorshipsByPaperId = state.authorships.get('byPaperId');
-  const authorships = authorshipsByPaperId.get(paperId);
+  const authorships = authorshipsByPaperId.get(paperId, I.Set());
   const authors = authorships.map(
     as => state.authors.get(as.get('authorId'))
-  ).sortBy(a => a.get('name'));
+  ).filter(a => !!a).sortBy(a => a.get('name'));
 
   return authors;
 }
 
 export const papersForAuthorId = (state, authorId) => {
   const authorshipsByAuthorId = state.authorships.get('byAuthorId');
-  const authorships = authorshipsByAuthorId.get(authorId);
+  const authorships = authorshipsByAuthorId.get(authorId, I.Set());
   const papers = authorships.map(
     as => state.papers.get(as.get('paperId'))
-  ).sortBy(p => p.get('publicationDateTime'));
+  ).filter(p => !!p).sortBy(p => p.get('publicationDateTime'));
 
   return papers
 };
