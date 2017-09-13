@@ -20,11 +20,11 @@ export const fetchAllPapers = () => async (dispatch) => {
 
 export const fetchPaper = (paperId) => async (dispatch) => {
   const response = await (await fetch(`/api/papers/${paperId}`)).json();
-  dispatch([
+  dispatch(batchActions([
     receiveAuthors(response.authors),
     receiveAuthorships(response.authorships),
     receivePapers(response.papers),
-  ]);
+  ]));
 }
 
 export const receivePapers = (papers) => ({
