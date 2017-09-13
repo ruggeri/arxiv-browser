@@ -1,6 +1,6 @@
 let path = require('path');
 
-module.exports = {
+module.exports = [{
   entry: [
     'babel-polyfill',
     './frontend/app.js',
@@ -23,4 +23,23 @@ module.exports = {
   },
 
   devtool: 'source-map',
-};
+}, {
+  entry: './assets/app.scss',
+
+  module: {
+    loaders: [
+      {
+        test: /\.scss/,
+        exclude: /node_modules/,
+        loader: ['style-loader', 'css-loader', 'sass-loader']
+      }
+    ]
+  },
+
+  output: {
+    path: path.join(__dirname, 'static'),
+    filename: 'style.js'
+  },
+
+  devtool: 'source-map',
+}];

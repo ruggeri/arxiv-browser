@@ -19,7 +19,7 @@ class PaperAuthorsList extends React.Component {
     ));
 
     return (
-      <ul>{authorItems}</ul>
+      <ul className="paper-author-list">{authorItems}</ul>
     );
   }
 }

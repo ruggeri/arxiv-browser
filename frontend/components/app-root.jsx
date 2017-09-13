@@ -8,7 +8,7 @@ import AuthorShow from './papers/author-show.jsx';
 const AppRoot = ({ store }) => (
   <Provider store={store}>
     <BrowserRouter>
-      <div>
+      <div className="container">
         <Route exact path="/" component={PapersIndex}/>
         <Route path="/authors/:authorId" component={AuthorShow}/>
         <Route path="/papers/:paperId" component={PaperShow}/>
