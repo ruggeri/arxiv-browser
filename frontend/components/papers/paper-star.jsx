@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
+import { connect } from 'react-redux';
+import { togglePaperStar } from '../../actions/paper-status-actions';
 
 class PaperStar extends React.Component {
   render() {
@@ -23,10 +25,6 @@ class PaperStar extends React.Component {
     );
   }
 }
-
-// Container
-import { connect } from 'react-redux';
-import { togglePaperStar } from '../../actions/paper-status-actions';
 
 export default connect(
   (state) => ({}),

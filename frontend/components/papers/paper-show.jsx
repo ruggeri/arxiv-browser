@@ -1,30 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PaperStar from './paper-star.jsx';
-
-class AuthorItem extends React.Component {
-  render() {
-    const { author } = this.props;
-    const url = `/authors/${author.get('id')}`
-    return <Link to={url}>{author.get('name')}</Link>;
-  }
-}
-
-class AuthorsList extends React.Component {
-  render() {
-    const { authors } = this.props;
-
-    const authorItems = authors.map(author => (
-      <li key={author.get('id')}>
-        <AuthorItem author={author}/>
-      </li>
-    ));
-
-    return (
-      <ul>{authorItems}</ul>
-    );
-  }
-}
+import AuthorsList from '../authors/authors-list.jsx';
 
 class PaperShow extends React.Component {
   componentDidMount() {
@@ -60,7 +36,7 @@ import { fetchPaper } from '../../actions/paper-actions';
 export default connect(
   (state, ownProps) => {
     const paperId = parseInt(ownProps.match.params.paperId);
-    
+
     return {
       paper: state.papers.get(paperId),
       paperId: paperId,
