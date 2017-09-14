@@ -79,12 +79,6 @@ class Pager extends React.PureComponent {
     this.pager.stopWorkers();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // Changes to the mere `props.items` don't mean anything. There's no
-    // need to rerender until `state.items` (the ones displayed) change.
-    return !this.state.items.equals(nextState.items);
-  }
-
   render() {
     const Component = this.props.component;
     return <Component items={this.state.items}/>;

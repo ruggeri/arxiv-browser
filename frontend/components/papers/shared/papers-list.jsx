@@ -3,6 +3,10 @@ import { List } from 'immutable';
 import React from 'react';
 
 class PapersList extends React.PureComponent {
+  shouldComponentUpdate(nextProps) {
+    return !this.props.papers.equals(nextProps.papers);
+  }
+
   render() {
     const { papers, showAuthors } = this.props;
 
