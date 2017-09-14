@@ -1,21 +1,20 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
-import { isPaperArchived, isPaperStarred } from 'queries/paper';
+import { hasStarredAuthor, isPaperArchived, isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
 const FILTERS = {
   default: (state, papers) => {
-    return papers.filter(p => !isPaperArchived(state, {paper: p}));
+    return papers.filter(paper => !isPaperArchived(state, {paper}));
   },
 
   starred: (state, papers) => {
-    return papers.filter(p => isPaperStarred(state, {paper: p}));
+    return papers.filter(paper => isPaperStarred(state, {paper}));
   },
 
   starredAuthors: (state, papers) => {
-    // TODO!
-    return papers;
+    return papers.filter(paper => hasStarredAuthor(state, {paper}));
   }
 }
 
