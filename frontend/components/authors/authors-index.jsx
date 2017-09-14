@@ -1,3 +1,4 @@
+import { fetchAllAuthors } from 'actions/author-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -24,9 +25,19 @@ function filterAuthors(state, authors, filterName) {
 }
 
 class AuthorsIndex extends React.PureComponent {
+  componentDidMount() {
+    this.props.fetchAllAuthors();
+  }
+
   render() {
     const { authors } = this.props;
-    return <AuthorsList authors={authors}/>
+
+    return (
+      <div>
+        <h1>There are {authors.count()} authors in the archive!</h1>
+        <AuthorsList authors={authors}/>
+      </div>
+    );
   }
 }
 

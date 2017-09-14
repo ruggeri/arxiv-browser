@@ -18,6 +18,17 @@ export const fetchAuthor = (authorId) => async (dispatch) => {
   ]));
 };
 
+export const fetchAllAuthors = () => async (dispatch) => {
+  const response = await (await fetch('/api/authors')).json();
+  dispatch(batchActions([
+    receiveAuthors(response.authors),
+    receiveAuthorships(response.authorships),
+    receiveAuthorStatuses(response.authorStatuses),
+    receivePapers(response.papers),
+    receivePaperStatuses(response.paperStatuses),
+  ]));
+};
+
 export const receiveAuthors = (authors) => ({
   type: RECEIVE_AUTHORS,
   authors: authors,
