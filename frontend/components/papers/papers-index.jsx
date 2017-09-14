@@ -14,7 +14,9 @@ const FILTERS = {
   },
 
   starredAuthors: (state, papers) => {
-    return papers.filter(paper => hasStarredAuthor(state, {paper}));
+    return papers.filter(paper => (
+      hasStarredAuthor(state, {paper}) && !isPaperArchived(state, {paper})
+    ));
   }
 }
 
