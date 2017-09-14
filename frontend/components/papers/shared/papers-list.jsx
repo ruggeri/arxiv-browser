@@ -1,16 +1,10 @@
 import PaperItem from 'components/papers/shared/paper-item.jsx';
-import PagerComponent from 'helpers/pager-component';
 import { List } from 'immutable';
 import React from 'react';
 
-class PapersList extends PagerComponent {
-  constructor(props) {
-    super(props, {collectionName: 'papers', pageSize: 5, usePager: props.paginate});
-  }
-
+class PapersList extends React.PureComponent {
   render() {
-    const { showAuthors } = this.props;
-    const { papers } = this.state;
+    const { papers, showAuthors } = this.props;
 
     const paperItems = papers.map(paper => (
       <li key={paper.get('id')}>

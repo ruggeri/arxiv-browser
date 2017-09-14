@@ -1,6 +1,9 @@
 import { List } from 'immutable';
+import React from 'react';
 
-class ResultsPager {
+import { List } from 'immutable';
+
+class PagerHelper {
   constructor(pageIncrement, pagerCallback) {
     this.pageIncrement = pageIncrement;
     this.pagerCallback = pagerCallback;
@@ -49,4 +52,35 @@ class ResultsPager {
   }
 }
 
-export default ResultsPager;
+class Pager extends React.PureComponent {
+  constructor(props, pageSize) {
+    super(props);
+
+    this.pager = new ResultsPager(pageSize, pagedInResults => {
+      this.setState({items: pagedInResults });
+    });
+
+    this.state = {items: List()};
+  }
+
+  componentDidMount() {
+    this.pager.pageIn(this.props.items);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.items.equals(this.props.items)) {
+      this.pager.pageIn(this.props.items);
+    }
+  }
+
+  componentWillUnmount() {
+    this.pager.stopWorkers();
+  }
+
+  render() {
+    const Component = this.props.component;
+    return <Component items={this.state.items}/>;
+  }
+}
+
+export default Pager;
