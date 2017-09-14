@@ -1,31 +1,45 @@
 import I from 'immutable';
+import { _authorId, authorsForPaper, isAuthorStarred } from 'queries/author';
+
+export function _paperId({paper, paperId}) {
+  if (paper) {
+    paperId = paper.get('id');
+  }
+
+  if (!paperId) {
+    throw "No paper id given?";
+  }
+
+  return paperId;
+}
 
 export const getPaperById = (state, paperId) => {
   return state.papers.get(paperId);
 }
 
-export const isPaperArchived = (state, {paper, paperId}) => {
-  if (paper) {
-    paperId = paper.get('id');
-  }
+export const hasStarredAuthor = (state, paperOrId) => {
+  const paperId = _paperId(paperOrId);
+
+  const authors = authorsForPaper(state, {paperId});
+  return authors.some(a => isAuthorStarred(state, {author: a}));
+}
+
+export const isPaperArchived = (state, paperOrId) => {
+  const paperId = _paperId(paperOrId);
 
   const paperStatus = state.paperStatuses.get(paperId);
   return paperStatus && paperStatus.get('isArchived');
 }
 
-export const isPaperStarred = (state, {paper, paperId}) => {
-  if (paper) {
-    paperId = paper.get('id');
-  }
+export const isPaperStarred = (state, paperOrId) => {
+  const paperId = _paperId(paperOrId);
 
   const paperStatus = state.paperStatuses.get(paperId);
   return paperStatus && paperStatus.get('isStarred');
 }
 
-export const papersForAuthor = (state, {author, authorId}) => {
-  if (author) {
-    authorId = author.get('id');
-  }
+export const papersForAuthor = (state, authorOrId) => {
+  const authorId = _authorId(authorOrId);
 
   const authorshipsByAuthorId = state.authorships.get('byAuthorId');
   const authorships = authorshipsByAuthorId.get(authorId, I.Set());
