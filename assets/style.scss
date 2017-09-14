@@ -1,19 +1,18 @@
 @import "~bootstrap/scss/bootstrap";
 
-a.paper-author-link {
-  @extend .small;
-  color: red;
+.author.starred {
+  @extend .font-weight-bold;
 }
 
-ul.inline-authors-list {
+.inline-authors-list {
   @extend .list-inline;
 
   li {
     @extend .list-inline-item;
   }
 
-  li a {
-    @extend .paper-author-link;
+  .author {
+    color: red;
   }
 }
 
