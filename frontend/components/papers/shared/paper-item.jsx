@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
-import { authorsForPaperId } from 'query';
+import { authorsForPaper } from 'queries/author';
+import { getPaperById } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -37,11 +38,11 @@ PaperItem = connect(
     const paperId = ownProps.paper.get('id');
 
     const props = {
-      paperStatus: state.paperStatuses.get(paperId),
+      paperStatus: getPaperById(state, paperId),
     };
 
     if (ownProps.showAuthors) {
-      props.authors = authorsForPaperId(state, paperId);
+      props.authors = authorsForPaper(state, {paperId});
     }
 
     return props;

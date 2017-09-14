@@ -1,6 +1,6 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
-import { isPaperArchived, isPaperStarred } from 'query';
+import { isPaperArchived, isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -17,6 +17,16 @@ const FILTERS = {
     // TODO!
     return papers;
   }
+}
+
+function filterPapers(state, papers, filterName) {
+  let filterFn;
+  if (filterName) {
+    filterFn = FILTERS[filterName]
+  } else {
+    filterFn = FILTERS['default'];
+  }
+  return filterFn(state, papers);
 }
 
 class PapersIndex extends React.Component {
@@ -42,19 +52,15 @@ class PapersIndex extends React.Component {
 
 export default connect(
   (state, ownProps) => {
-    const props = {
-      papers: state.papers.valueSeq(),
+    const papers = filterPapers(
+      state,
+      state.papers.valueSeq(),
+      ownProps.filterName
+    );
+
+    return {
+      papers: papers
     };
-
-    let filter;
-    if (ownProps.filter) {
-      filter = FILTERS[ownProps.filter]
-    } else {
-      filter = FILTERS['default'];
-    }
-    props.papers = filter(state, props.papers);
-
-    return props;
   },
   (dispatch) => ({
     fetchAllPapers: () => dispatch(fetchAllPapers()),

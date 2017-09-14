@@ -1,7 +1,8 @@
 import { fetchAuthor } from 'actions/author-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
 import AuthorStar from 'components/authors/shared/author-star.jsx';
-import { papersForAuthorId } from 'query';
+import { getAuthorById } from 'queries/author';
+import { papersForAuthor } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -37,9 +38,9 @@ export default connect(
     const authorId = parseInt(ownProps.match.params.authorId);
 
     return {
-      author: state.authors.get(authorId),
+      author: getAuthorById(state, authorId),
       authorId: authorId,
-      authoredPapers: papersForAuthorId(state, authorId)
+      authoredPapers: papersForAuthor(state, {authorId})
     };
   },
   (dispatch) => ({

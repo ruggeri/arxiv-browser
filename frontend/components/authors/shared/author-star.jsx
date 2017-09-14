@@ -1,6 +1,6 @@
 import { toggleAuthorStar } from 'actions/author-status-actions';
 import classNames from 'classnames';
-import { isAuthorStarred } from 'query';
+import { isAuthorStarred } from 'queries/author';
 import React from 'react';
 import { connect } from 'react-redux';
 

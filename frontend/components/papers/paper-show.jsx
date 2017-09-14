@@ -1,6 +1,10 @@
+import { fetchPaper } from 'actions/paper-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
+import { authorsForPaper } from 'queries/author';
+import { getPaperById } from 'queries/paper';
 import React from 'react';
+import { connect } from 'react-redux';
 
 class PaperShow extends React.Component {
   componentDidMount() {
@@ -8,7 +12,7 @@ class PaperShow extends React.Component {
   }
 
   render() {
-    let { authors, paper, paperStatus } = this.props;
+    let { authors, paper } = this.props;
 
     if (!paper) {
       return (
@@ -28,19 +32,14 @@ class PaperShow extends React.Component {
   }
 }
 
-// Container
-import { connect } from 'react-redux';
-import { authorsForPaperId } from '../../query';
-import { fetchPaper } from '../../actions/paper-actions';
-
 export default connect(
   (state, ownProps) => {
     const paperId = parseInt(ownProps.match.params.paperId);
 
     return {
-      paper: state.papers.get(paperId),
+      paper: getPaperById(state, paperId),
       paperId: paperId,
-      authors: authorsForPaperId(state, paperId),
+      authors: authorsForPaper(state, {paperId}),
     };
   },
   (dispatch) => ({

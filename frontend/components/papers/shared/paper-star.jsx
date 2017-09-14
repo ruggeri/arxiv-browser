@@ -1,6 +1,6 @@
 import { togglePaperStar } from 'actions/paper-status-actions';
 import classNames from 'classnames';
-import { isPaperStarred } from 'query';
+import { isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
