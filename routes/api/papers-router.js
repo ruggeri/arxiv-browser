@@ -4,20 +4,23 @@ async function buildResponse(ctx, papers) {
   ctx.body = {};
 
   ctx.body.papers = papers;
+  const paperIds = papers.map(p => p.id);
+
   ctx.body.paperStatuses = await ctx.models.PaperStatus.findAll(
-    {where: {id: {$in: papers.map(p => p.id)}}}
+    {where: {id: {$in: paperIds}}}
   );
 
   ctx.body.authorships = await ctx.models.Authorship.findAll(
-    {where: {paperId: {$in: papers.map(p => p.id)}}}
+    {where: {paperId: {$in: paperIds}}}
   );
+  const authorIds = ctx.body.authorships.map(as => as.authorId);
 
   ctx.body.authors = await ctx.models.Author.findAll(
-    {where: {id: {$in: ctx.body.authorships.map(as => as.authorId)}}}
+    {where: {id: {$in: authorIds}}}
   );
 
   ctx.body.authorStatuses = await ctx.models.AuthorStatus.findAll(
-    {where: {id: {$in: ctx.body.authorships.map(as => as.authorId)}}}
+    {where: {id: {$in: authorIds}}}
   );
 }
 

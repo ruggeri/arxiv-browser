@@ -1,34 +1,46 @@
 const koaRouter = require('koa-router');
 
-const authorsRouter = new koaRouter();
-authorsRouter.get('/:authorId', async ctx => {
-  ctx.body = {
-    authors: {},
-    authorships: {},
-    papers: {},
-  };
+async function buildResponse(ctx, authors) {
+  ctx.body = {};
 
-  const author = await ctx.models.Author.findById(ctx.params.authorId)
-  ctx.body.authors = [author.toJSON()];
+  ctx.body.authors = authors;
+  const authorIds = authors.map(a => a.id);
 
   ctx.body.authorships = await ctx.models.Authorship.findAll(
-    {where: {authorId: ctx.params.authorId}}
+    {where: {authorId: {$in: authorIds}}}
   );
 
   ctx.body.authorStatuses = await ctx.models.AuthorStatus.findAll(
-    {where: {authorId: ctx.params.authorId}}
+    {where: {authorId: {$in: authorIds}}}
   );
+  const paperIds = ctx.body.authorships.map(as => as.paperId);
 
   ctx.body.papers = await ctx.models.Paper.findAll(
     {
-      where: {id: {$in: ctx.body.authorships.map(as => as.paperId)}},
+      where: {id: {$in: paperIds}},
       order: [['publicationDateTime', 'DESC']]
     }
   );
 
   ctx.body.paperStatuses = await ctx.models.PaperStatus.findAll(
-    {where: {id: {$in: ctx.body.authorships.map(as => as.paperId)}}}
+    {where: {id: {$in: paperIds}}}
   );
+}
+
+const authorsRouter = new koaRouter();
+authorsRouter.get('/', async ctx => {
+  // TODO: eventually I will want to paginate this...
+  const authors = await ctx.models.Author.findAll();
+
+  await buildResponse(ctx, authors);
+});
+
+authorsRouter.get('/:authorId', async ctx => {
+  const authors = await ctx.models.Author.findAll({
+    where: {id: ctx.params.authorId}
+  });
+
+  await buildResponse(ctx, authors);
 });
 
 authorsRouter.post('/:authorId/authorStatus/toggleStar', async ctx => {
