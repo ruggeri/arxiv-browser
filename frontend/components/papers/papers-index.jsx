@@ -1,6 +1,6 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
-import { hasStarredAuthor, isPaperArchived, isPaperStarred } from 'queries/paper';
+import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -28,12 +28,7 @@ function filterPapers(state, papers, filterName) {
   return filterFn(state, papers);
 }
 
-let t;
 class PapersIndex extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.fetchAllPapers();
   }
@@ -53,13 +48,11 @@ class PapersIndex extends React.PureComponent {
 export default connect(
   (state, ownProps) => {
     const papers = filterPapers(
-      state,
-      state.papers.valueSeq(),
-      ownProps.filterName
+      state, getAllPapers(state), ownProps.filterName
     );
 
     return {
-      papers: papers
+      papers,
     };
   },
   (dispatch) => ({

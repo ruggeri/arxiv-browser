@@ -13,6 +13,10 @@ export function _paperId({paper, paperId}) {
   return paperId;
 }
 
+export const getAllPapers = (state) => {
+  return state.papers.valueSeq().toList();
+}
+
 export const getPaperById = (state, paperId) => {
   return state.papers.get(paperId);
 }
