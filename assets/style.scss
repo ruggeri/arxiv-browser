@@ -5,7 +5,7 @@ a.paper-author-link {
   color: red;
 }
 
-ul.paper-author-list {
+ul.inline-authors-list {
   @extend .list-inline;
 
   li {
@@ -15,4 +15,8 @@ ul.paper-author-list {
   li a {
     @extend .paper-author-link;
   }
+}
+
+.paper.starred {
+  @extend .font-weight-bold;
 }

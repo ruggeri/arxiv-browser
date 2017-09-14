@@ -1,7 +1,7 @@
+import { fetchAllPapers } from 'actions/paper-actions';
+import PapersList from 'components/papers/shared/papers-list.jsx';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAllPapers } from 'actions/paper-actions';
-import PapersIndexList from 'components/papers/index/papers-index-list.jsx';
 
 class PapersIndex extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class PapersIndex extends React.Component {
     return (
       <div>
         <h1>There are {papers.size} papers in the archive!</h1>
-        <PapersIndexList papers={papers}/>
+        <PapersList papers={papers} showAuthors={true}/>
       </div>
     );
   }
@@ -26,7 +26,7 @@ class PapersIndex extends React.Component {
 
 export default connect(
   (state) => ({
-    papers: state.papers,
+    papers: state.papers.valueSeq(),
   }),
   (dispatch) => ({
     fetchAllPapers: () => dispatch(fetchAllPapers()),

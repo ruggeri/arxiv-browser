@@ -11,10 +11,12 @@ class PaperIndexItem extends React.Component {
     const url = `/papers/${paper.get('id')}`
 
     return (
-      <div>
-        <Link to={url}>{paper.get('title')}</Link> <PaperStar paper={paper}/>
+      <span>
+        <Link to={url}>
+          {paper.get('title')}
+        </Link> <PaperStar paper={paper}/>
         <InlineAuthorsList authors={authors}/>
-      </div>
+      </span>
     );
   }
 }

@@ -25,7 +25,7 @@ class InlineAuthorsList extends React.Component {
     ));
 
     return (
-      <ul className="paper-author-list">{authorItems}</ul>
+      <ul className="inline-authors-list">{authorItems}</ul>
     );
   }
 }

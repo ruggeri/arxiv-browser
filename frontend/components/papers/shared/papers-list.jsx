@@ -3,11 +3,11 @@ import React from 'react';
 
 class PapersList extends React.Component {
   render() {
-    const { papers } = this.props;
+    const { papers, showAuthors } = this.props;
 
     const paperItems = papers.map(paper => (
       <li key={paper.get('id')}>
-        <PaperItem paper={paper}/>
+        <PaperItem paper={paper} showAuthors={showAuthors}/>
       </li>
     ));
 
