@@ -4,7 +4,7 @@ import { isAuthorStarred } from 'queries/author';
 import React from 'react';
 import { connect } from 'react-redux';
 
-class AuthorStar extends React.Component {
+class AuthorStar extends React.PureComponent {
   render() {
     const { author, isStarred, toggleAuthorStar } = this.props;
 

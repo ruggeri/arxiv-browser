@@ -7,7 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-class PaperItem extends React.Component {
+class PaperItem extends React.PureComponent {
   render() {
     const { authors, isStarred, paper } = this.props;
     const url = `/papers/${paper.get('id')}`

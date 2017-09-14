@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import AuthorItem from 'components/authors/shared/author-item.jsx';
 import React from 'react';
 
-class AuthorsList extends React.Component {
+class AuthorsList extends React.PureComponent {
   render() {
     const { authors, inline } = this.props;
 

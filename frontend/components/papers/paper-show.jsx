@@ -6,7 +6,7 @@ import { getPaperById } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
-class PaperShow extends React.Component {
+class PaperShow extends React.PureComponent {
   componentDidMount() {
     this.props.fetchPaper(this.props.paperId);
   }

@@ -7,7 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-class AuthorShow extends React.Component {
+class AuthorShow extends React.PureComponent {
   componentDidMount() {
     this.props.fetchAuthor(this.props.authorId);
   }

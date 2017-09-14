@@ -4,7 +4,7 @@ import { isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
-class PaperStar extends React.Component {
+class PaperStar extends React.PureComponent {
   render() {
     const { isStarred, paper, togglePaperStar } = this.props;
 

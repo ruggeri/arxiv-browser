@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-class AuthorItem extends React.Component {
+class AuthorItem extends React.PureComponent {
   render() {
     const { author, isStarred } = this.props;
     const url = `/authors/${author.get('id')}`

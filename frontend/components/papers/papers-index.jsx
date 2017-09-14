@@ -28,7 +28,8 @@ function filterPapers(state, papers, filterName) {
   return filterFn(state, papers);
 }
 
-class PapersIndex extends React.Component {
+let t;
+class PapersIndex extends React.PureComponent {
   constructor(props) {
     super(props);
   }

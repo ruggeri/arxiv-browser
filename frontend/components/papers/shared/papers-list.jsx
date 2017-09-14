@@ -1,7 +1,7 @@
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import React from 'react';
 
-class PapersList extends React.Component {
+class PapersList extends React.PureComponent {
   render() {
     const { papers, showAuthors } = this.props;
 
