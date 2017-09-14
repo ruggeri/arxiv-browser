@@ -42,8 +42,8 @@ class PapersIndex extends React.PureComponent {
     return (
       <div>
         <h1>There are {papers.count()} papers in the archive!</h1>
-        <Searcher items={papers} searchFieldName="title" component={({items}) => (
-          <PapersList papers={items} showAuthors={true} paginate={true}/>
+        <Searcher items={papers} limitResults={20} searchFieldName="title" component={({items}) => (
+          <PapersList papers={items} showAuthors={true}/>
         )}/>
       </div>
     );
