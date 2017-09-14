@@ -1,9 +1,10 @@
+import classNames from 'classnames';
 import AuthorItem from 'components/authors/shared/author-item.jsx';
 import React from 'react';
 
 class AuthorsList extends React.Component {
   render() {
-    const { authors } = this.props;
+    const { authors, inline } = this.props;
 
     const authorItems = authors.map(author => (
       <li key={author.get('id')}>
@@ -11,8 +12,12 @@ class AuthorsList extends React.Component {
       </li>
     ));
 
+    const listClass = classNames({
+      "inline-authors-list": inline,
+    });
+
     return (
-      <ul>{authorItems}</ul>
+      <ul className={listClass}>{authorItems}</ul>
     );
   }
 }

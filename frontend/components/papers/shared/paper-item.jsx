@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import InlineAuthorsList from 'components/papers/index/inline-authors-list.jsx';
+import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import { authorsForPaperId } from 'query';
 import React from 'react';
@@ -18,7 +18,7 @@ class PaperItem extends React.Component {
 
     let authorsElement = null;
     if (authors) {
-      authorsElement = <InlineAuthorsList authors={authors}/>;
+      authorsElement = <AuthorsList authors={authors} inline={true}/>;
     }
 
     return (
