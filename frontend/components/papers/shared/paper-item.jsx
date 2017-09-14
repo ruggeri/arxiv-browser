@@ -2,19 +2,19 @@ import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import { authorsForPaper } from 'queries/author';
-import { getPaperById } from 'queries/paper';
+import { getPaperById, isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 class PaperItem extends React.Component {
   render() {
-    const { authors, paper, paperStatus } = this.props;
+    const { authors, isStarred, paper } = this.props;
     const url = `/papers/${paper.get('id')}`
 
     const linkClass = classNames({
       paper: true,
-      starred: paperStatus && paperStatus.get('isStarred')
+      starred: isStarred,
     });
 
     let authorsElement = null;
@@ -38,7 +38,7 @@ PaperItem = connect(
     const paperId = ownProps.paper.get('id');
 
     const props = {
-      paperStatus: getPaperById(state, paperId),
+      isStarred: isPaperStarred(state, {paperId}),
     };
 
     if (ownProps.showAuthors) {
