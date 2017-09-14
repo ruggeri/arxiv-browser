@@ -1,31 +1,12 @@
 import classNames from 'classnames';
 import AuthorItem from 'components/authors/shared/author-item.jsx';
-import ResultsPager from 'helpers/results-pager';
+import PagerComponent from 'helpers/pager-component';
 import { List } from 'immutable';
 import React from 'react';
 
-class AuthorsList extends React.PureComponent {
+class AuthorsList extends PagerComponent {
   constructor(props) {
-    super(props);
-
-    this.state = {authors: List()};
-    this.authorsPager = new ResultsPager(5, pagedInAuthors => {
-      this.setState({authors: pagedInAuthors })
-    });
-  }
-
-  componentDidMount() {
-    this.authorsPager.pageIn(this.props.authors);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.authors.equals(this.props.authors)) {
-      this.authorsPager.pageIn(this.props.authors);
-    }
-  }
-
-  componentWillUnmount() {
-    this.authorsPager.stopWorkers();
+    super(props, {collectionName: 'authors', pageSize: 5, usePager: props.paginate});
   }
 
   render() {

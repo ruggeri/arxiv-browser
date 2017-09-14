@@ -35,7 +35,7 @@ class AuthorsIndex extends React.PureComponent {
     return (
       <div>
         <h1>There are {authors.count()} authors in the archive!</h1>
-        <AuthorsList authors={authors}/>
+        <AuthorsList authors={authors} paginate={true}/>
       </div>
     );
   }

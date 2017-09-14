@@ -1,30 +1,11 @@
 import PaperItem from 'components/papers/shared/paper-item.jsx';
-import ResultsPager from 'helpers/results-pager';
+import PagerComponent from 'helpers/pager-component';
 import { List } from 'immutable';
 import React from 'react';
 
-class PapersList extends React.PureComponent {
+class PapersList extends PagerComponent {
   constructor(props) {
-    super(props);
-
-    this.state = {papers: List()};
-    this.papersPager = new ResultsPager(5, pagedInPapers => {
-      this.setState({papers: pagedInPapers })
-    });
-  }
-
-  componentDidMount() {
-    this.papersPager.pageIn(this.props.papers);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.papers.equals(this.props.papers)) {
-      this.papersPager.pageIn(this.props.papers);
-    }
-  }
-
-  componentWillUnmount() {
-    this.papersPager.stopWorkers();
+    super(props, {collectionName: 'papers', pageSize: 5, usePager: props.paginate});
   }
 
   render() {

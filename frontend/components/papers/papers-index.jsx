@@ -39,7 +39,7 @@ class PapersIndex extends React.PureComponent {
     return (
       <div>
         <h1>There are {papers.count()} papers in the archive!</h1>
-        <PapersList papers={papers} showAuthors={true}/>
+        <PapersList papers={papers} showAuthors={true} paginate={true}/>
       </div>
     );
   }
