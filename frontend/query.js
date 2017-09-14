@@ -27,13 +27,30 @@ export const authorsForPaperId = (state, paperId) => {
   return authors;
 }
 
+export const isAuthorStarred = (state, {author, authorId}) => {
+  if (author) {
+    authorId = author.get('id');
+  }
+
+  const authorStatus = state.authorStatuses.get(authorId);
+  return authorStatus && authorStatus.get('isStarred');
+}
+
+export const isPaperArchived = (state, {paper, paperId}) => {
+  if (paper) {
+    paperId = paper.get('id');
+  }
+
+  const paperStatus = state.paperStatuses.get(paperId);
+  return paperStatus && paperStatus.get('isArchived');
+}
+
 export const isPaperStarred = (state, {paper, paperId}) => {
   if (paper) {
     paperId = paper.get('id');
   }
 
   const paperStatus = state.paperStatuses.get(paperId);
-  console.log(paperStatus.toJS());
   return paperStatus && paperStatus.get('isStarred');
 }
 

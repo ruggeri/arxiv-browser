@@ -1,13 +1,18 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
-import { isPaperStarred } from 'query';
+import { isPaperArchived, isPaperStarred } from 'query';
 import React from 'react';
 import { connect } from 'react-redux';
 
 const FILTERS = {
+  default: (state, papers) => {
+    return papers.filter(p => !isPaperArchived(state, {paper: p}));
+  },
+
   starred: (state, papers) => {
     return papers.filter(p => isPaperStarred(state, {paper: p}));
   },
+
   starredAuthors: (state, papers) => {
     // TODO!
     return papers;
@@ -41,10 +46,13 @@ export default connect(
       papers: state.papers.valueSeq(),
     };
 
+    let filter;
     if (ownProps.filter) {
-      const filter = FILTERS[ownProps.filter];
-      props.papers = filter(state, props.papers);
+      filter = FILTERS[ownProps.filter]
+    } else {
+      filter = FILTERS['default'];
     }
+    props.papers = filter(state, props.papers);
 
     return props;
   },
