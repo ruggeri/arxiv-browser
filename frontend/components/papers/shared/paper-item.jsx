@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
+import PaperTrash from 'components/papers/shared/paper-trash.jsx';
 import { authorsForPaper } from 'queries/author';
 import { getPaperById, isPaperStarred } from 'queries/paper';
 import React from 'react';
@@ -26,7 +27,7 @@ class PaperItem extends React.PureComponent {
       <span>
         <Link to={url} className={linkClass}>
           {paper.get('title')}
-        </Link> <PaperStar paper={paper}/>
+        </Link> <PaperStar paper={paper}/> <PaperTrash paper={paper}/>
         {authorsElement}
       </span>
     );

@@ -42,6 +42,17 @@ papersRouter.get('/:paperId', async ctx => {
   await buildResponse(ctx, papers);
 });
 
+papersRouter.post('/:paperId/paperStatus/toggleArchived', async ctx => {
+  const paperStatus = await ctx.models.PaperStatus.findOne({
+    where: {paperId: ctx.params.paperId}
+  });
+
+  paperStatus.isArchived = !paperStatus.isArchived;
+  await paperStatus.save();
+
+  ctx.body = {paperStatus: paperStatus};
+});
+
 papersRouter.post('/:paperId/paperStatus/toggleStar', async ctx => {
   const paperStatus = await ctx.models.PaperStatus.findOne({
     where: {paperId: ctx.params.paperId}

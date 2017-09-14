@@ -10,6 +10,16 @@ export const togglePaperStar = (paperId) => async (dispatch) => {
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 
+export const togglePaperArchived = (paperId) => async (dispatch) => {
+  const request = new Request(
+    `/api/papers/${paperId}/paperStatus/toggleArchived`, {
+    method: "POST",
+  });
+
+  const response = await (await fetch(request)).json();
+  dispatch(receivePaperStatuses([response.paperStatus]));
+};
+
 export const receivePaperStatuses = (paperStatuses) => ({
   type: RECEIVE_PAPER_STATUSES,
   paperStatuses: paperStatuses,
