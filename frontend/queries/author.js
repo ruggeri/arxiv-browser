@@ -13,6 +13,10 @@ export function _authorId({author, authorId}) {
   return authorId;
 }
 
+export const getAllAuthors = (state) => {
+  return state.authors.valueSeq().toList().sortBy(a => a.get('name'));
+}
+
 export const authorsForPaper = (state, paperOrId) => {
   const paperId = _paperId(paperOrId);
 
