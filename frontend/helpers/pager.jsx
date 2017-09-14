@@ -1,11 +1,13 @@
 import { List } from 'immutable';
 import React from 'react';
 
-import { List } from 'immutable';
-
 class PagerHelper {
-  constructor(pageIncrement, pagerCallback) {
-    this.pageIncrement = pageIncrement;
+  constructor(pageSize, pagerCallback) {
+    if (!(pageSize > 0)) {
+      throw `Why is pageSize ${JSON.stringify(pageSize)}?`
+    }
+
+    this.pageSize = pageSize;
     this.pagerCallback = pagerCallback;
     this.pagedInResults = List();
 
@@ -39,7 +41,7 @@ class PagerHelper {
       //
       // I'm kind of proud of this!
       this.pagedInResults = resultsToPage.take(
-        this.pagedInResults.count() + this.pageIncrement
+        this.pagedInResults.count() + this.pageSize
       );
       this.pagerCallback(this.pagedInResults)
 
@@ -53,11 +55,11 @@ class PagerHelper {
 }
 
 class Pager extends React.PureComponent {
-  constructor(props, pageSize) {
+  constructor(props) {
     super(props);
 
-    this.pager = new ResultsPager(pageSize, pagedInResults => {
-      this.setState({items: pagedInResults });
+    this.pager = new PagerHelper(this.props.pageSize, pagedInResults => {
+      this.setState({items: pagedInResults});
     });
 
     this.state = {items: List()};
@@ -67,14 +69,20 @@ class Pager extends React.PureComponent {
     this.pager.pageIn(this.props.items);
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.items.equals(this.props.items)) {
-      this.pager.pageIn(this.props.items);
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.items.equals(this.props.items)) {
+      this.pager.pageIn(nextProps.items);
     }
   }
 
   componentWillUnmount() {
     this.pager.stopWorkers();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // Changes to the mere `props.items` don't mean anything. There's no
+    // need to rerender until `state.items` (the ones displayed) change.
+    return !this.state.items.equals(nextState.items);
   }
 
   render() {

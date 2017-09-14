@@ -1,5 +1,6 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
+import Pager from 'helpers/pager.jsx';
 import Searcher from 'helpers/searcher.jsx';
 import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred } from 'queries/paper';
 import React from 'react';
@@ -31,6 +32,19 @@ function filterPapers(state, papers, filterName) {
   return filterFn(state, papers);
 }
 
+class SearchablePaginatedPapersList extends React.PureComponent {
+  render() {
+    const {papers} = this.props;
+    return (
+      <Searcher items={papers} searchFieldName="title" component={({items}) => (
+        <Pager items={items} pageSize={1} component={({items}) => (
+          <PapersList papers={items} showAuthors={true}/>
+        )}/>
+      )}/>
+    );
+  }
+}
+
 class PapersIndex extends React.PureComponent {
   componentDidMount() {
     this.props.fetchAllPapers();
@@ -42,9 +56,7 @@ class PapersIndex extends React.PureComponent {
     return (
       <div>
         <h1>There are {papers.count()} papers in the archive!</h1>
-        <Searcher items={papers} limitResults={20} searchFieldName="title" component={({items}) => (
-          <PapersList papers={items} showAuthors={true}/>
-        )}/>
+        <SearchablePaginatedPapersList papers={papers}/>
       </div>
     );
   }
