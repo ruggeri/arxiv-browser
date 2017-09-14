@@ -8,10 +8,10 @@ rootRouter.get('/', async ctx => {
   await ctx.render('index.html.pug');
 });
 // TODO: Maybe someday do some kind of pre-rendering server side?
-rootRouter.get('/authors/:authorId', async ctx => {
+rootRouter.get(/^\/authors/, async ctx => {
   await ctx.render('index.html.pug');
 });
-rootRouter.get('/papers/:paperId', async ctx => {
+rootRouter.get(/^\/papers/, async ctx => {
   await ctx.render('index.html.pug');
 });
 

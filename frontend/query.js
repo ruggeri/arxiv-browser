@@ -27,6 +27,16 @@ export const authorsForPaperId = (state, paperId) => {
   return authors;
 }
 
+export const isPaperStarred = (state, {paper, paperId}) => {
+  if (paper) {
+    paperId = paper.get('id');
+  }
+
+  const paperStatus = state.paperStatuses.get(paperId);
+  console.log(paperStatus.toJS());
+  return paperStatus && paperStatus.get('isStarred');
+}
+
 export const papersForAuthorId = (state, authorId) => {
   const authorshipsByAuthorId = state.authorships.get('byAuthorId');
   const authorships = authorshipsByAuthorId.get(authorId, I.Set());
