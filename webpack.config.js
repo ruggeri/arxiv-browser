@@ -13,7 +13,14 @@ module.exports = [{
         test: /(\.js|\.jsx)/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-      }
+      },
+    ],
+  },
+
+  resolve: {
+    modules: [
+      path.resolve('./frontend'),
+      path.resolve('./node_modules'),
     ],
   },
 

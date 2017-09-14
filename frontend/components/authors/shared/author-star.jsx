@@ -1,5 +1,7 @@
+import { toggleAuthorStar } from 'actions/author-status-actions';
 import classNames from 'classnames';
 import React from 'react';
+import { connect } from 'react-redux';
 
 class AuthorStar extends React.Component {
   render() {
@@ -24,13 +26,14 @@ class AuthorStar extends React.Component {
   }
 }
 
-// Container
-import { connect } from 'react-redux';
-import { toggleAuthorStar } from '../../actions/author-status-actions';
-
 export default connect(
-  (state) => ({}),
-  (dispatch) => ({
+  (state, ownProps) => {
+    const authorId = ownProps.author.get('id');
+
+    return {
+      authorStatus: state.authorStatuses.get(authorId),
+    }
+  }, (dispatch) => ({
     toggleAuthorStar: (authorId) => dispatch(toggleAuthorStar(authorId)),
   }),
 )(AuthorStar);

@@ -1,7 +1,7 @@
+import { togglePaperStar } from 'actions/paper-status-actions';
 import classNames from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
-import { togglePaperStar } from '../../actions/paper-status-actions';
 
 class PaperStar extends React.Component {
   render() {
@@ -27,7 +27,13 @@ class PaperStar extends React.Component {
 }
 
 export default connect(
-  (state) => ({}),
+  (state, ownProps) => {
+    const paperId = ownProps.paper.get('id');
+
+    return {
+      paperStatus: state.paperStatuses.get(paperId),
+    }
+  },
   (dispatch) => ({
     togglePaperStar: (paperId) => dispatch(togglePaperStar(paperId)),
   }),

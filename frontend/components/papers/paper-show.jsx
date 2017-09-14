@@ -1,6 +1,6 @@
+import AuthorsList from 'components/authors/shared/authors-list.jsx';
+import PaperStar from 'components/papers/shared/paper-star.jsx';
 import React from 'react';
-import PaperStar from './paper-star.jsx';
-import AuthorsList from '../authors/authors-list.jsx';
 
 class PaperShow extends React.Component {
   componentDidMount() {
@@ -20,7 +20,7 @@ class PaperShow extends React.Component {
       <div>
         <h1>
           {paper.get('title')}
-          <PaperStar paperStatus={paperStatus}/>
+          <PaperStar paper={paper}/>
         </h1>
         <AuthorsList authors={authors}/>
       </div>
@@ -40,7 +40,6 @@ export default connect(
     return {
       paper: state.papers.get(paperId),
       paperId: paperId,
-      paperStatus: state.paperStatuses.get(paperId),
       authors: authorsForPaperId(state, paperId),
     };
   },
