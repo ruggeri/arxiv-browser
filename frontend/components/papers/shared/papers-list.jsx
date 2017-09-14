@@ -23,6 +23,10 @@ class PapersList extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.papersPager.stopWorkers();
+  }
+
   render() {
     const { showAuthors } = this.props;
     const { papers } = this.state;

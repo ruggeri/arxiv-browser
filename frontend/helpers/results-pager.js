@@ -14,7 +14,7 @@ class ResultsPager {
   }
 
   async pageIn(resultsToPage) {
-    this.workerId += 1;
+    this.stopWorkers();
     const myWorkerId = this.currentWorkerId;
 
     while (!this.pagedInResults.equals(resultsToPage)) {
@@ -42,6 +42,10 @@ class ResultsPager {
 
       await this.delay(5);
     }
+  }
+
+  stopWorkers() {
+    this.currentWorkerId += 1;
   }
 }
 

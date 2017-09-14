@@ -24,6 +24,10 @@ class AuthorsList extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.authorsPager.stopWorkers();
+  }
+
   render() {
     const { inline } = this.props;
     const { authors } = this.state;
