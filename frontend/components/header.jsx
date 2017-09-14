@@ -10,8 +10,8 @@ class Header extends React.PureComponent {
             Papers
             <ul>
               <li><Link to="/papers">Papers Inbox</Link></li>
-              <li><Link to="/papers/starred">Starred papers</Link></li>
-              <li><Link to="/authors/starred/papers">Starred author papers</Link></li>
+              <li><Link to="/papers/starred">Starred Papers</Link></li>
+              <li><Link to="/authors/starred/papers">Starred Author Papers</Link></li>
             </ul>
           </li>
 
