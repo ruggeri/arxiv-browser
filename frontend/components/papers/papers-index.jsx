@@ -81,7 +81,7 @@ export default connect(
 
     return {
       papers: papers,
-      searchPapers: query => searchPapers(state, query),
+      searchPapers: query => searchPapers(state, query, papers),
     };
   },
   (dispatch) => ({

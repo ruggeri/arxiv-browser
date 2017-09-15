@@ -54,10 +54,10 @@ export const papersForAuthor = (state, authorOrId) => {
   return papers
 };
 
-export const searchPapers = (state, query, limitResults) => {
+export const searchPapers = (state, query, papers, {limitResults} = {}) => {
   query = query.toLowerCase();
 
-  let matchedItems = state.papers.valueSeq().filter(paper => {
+  let matchedItems = papers.filter(paper => {
     if (paper.get('title').toLowerCase().includes(query)) {
       return true;
     }
