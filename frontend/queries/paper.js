@@ -53,3 +53,24 @@ export const papersForAuthor = (state, authorOrId) => {
 
   return papers
 };
+
+export const searchPapers = (state, query, limitResults) => {
+  query = query.toLowerCase();
+
+  let matchedItems = state.papers.valueSeq().filter(paper => {
+    if (paper.get('title').toLowerCase().includes(query)) {
+      return true;
+    }
+
+    const authors = authorsForPaper(state, {paper});
+    return authors.some(author => (
+      author.get('name').toLowerCase().includes(query)
+    ));
+  });
+
+  if (limitResults) {
+    matchedItems = matchedItems.take(limitResults);
+  }
+
+  return matchedItems.toList();
+}

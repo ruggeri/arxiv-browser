@@ -39,17 +39,7 @@ class Searcher extends React.PureComponent {
       return;
     }
 
-    const {limitResults, searchFieldName} = this.props;
-    query = query.toLowerCase();
-
-    let matchedItems = this.props.items.filter(item => {
-      return item.get(searchFieldName).toLowerCase().includes(query)
-    });
-
-    if (limitResults) {
-      matchedItems = matchedItems.take(limitResults);
-    }
-
+    const matchedItems = this.props.searcher(query);
     this.setState({items: matchedItems});
   }
 
