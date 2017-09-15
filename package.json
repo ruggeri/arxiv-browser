@@ -19,6 +19,7 @@
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.1",
     "koa-views": "^6.0.2",
+    "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "pug": "^2.0.0-rc.4",
     "react": "^15.6.1",
