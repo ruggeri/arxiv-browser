@@ -1,5 +1,7 @@
 import { fetchAllAuthors } from 'actions/author-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
+import Pager from 'helpers/pager.jsx';
+import Searcher from 'helpers/searcher.jsx';
 import React from 'react';
 import { connect } from 'react-redux';
 import { getAllAuthors, isAuthorStarred } from 'queries/author';
@@ -24,6 +26,27 @@ function filterAuthors(state, authors, filterName) {
   return filterFn(state, authors);
 }
 
+class SearchablePaginatedAuthorsList extends React.PureComponent {
+  render() {
+    const {authors} = this.props;
+
+    const searchAuthors = query => {
+      query = query.toLowerCase();
+      return authors.filter(author => (
+        author.get('name').toLowerCase().includes(query)
+      ));
+    }
+
+    return (
+      <Searcher searcher={searchAuthors} component={({items}) => (
+        <Pager items={items} pageSize={1} component={({items}) => (
+          <AuthorsList authors={items}/>
+        )}/>
+      )}/>
+    );
+  }
+}
+
 class AuthorsIndex extends React.PureComponent {
   componentDidMount() {
     this.props.fetchAllAuthors();
@@ -35,7 +58,7 @@ class AuthorsIndex extends React.PureComponent {
     return (
       <div>
         <h1>There are {authors.count()} authors in the archive!</h1>
-        <AuthorsList authors={authors} paginate={true}/>
+        <SearchablePaginatedAuthorsList authors={authors}/>
       </div>
     );
   }
