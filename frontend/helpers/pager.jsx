@@ -9,8 +9,6 @@ class PagerHelper {
 
     this.pageSize = pageSize;
     this.pagerCallback = pagerCallback;
-    this.pagedInResults = List();
-
     this.currentWorkerId = 0;
   }
 
@@ -22,7 +20,10 @@ class PagerHelper {
     this.stopWorkers();
     const myWorkerId = this.currentWorkerId;
 
-    while (!this.pagedInResults.equals(resultsToPage)) {
+    let pagedInResults = List();
+    // Clear out any pre-existing results.
+    this.pagerCallback(pagedInResults);
+    while (!pagedInResults.equals(resultsToPage)) {
       if (myWorkerId != this.currentWorkerId) {
         // someone else will take over this work.
         return;
@@ -40,10 +41,10 @@ class PagerHelper {
       // results are always appended, though.
       //
       // I'm kind of proud of this!
-      this.pagedInResults = resultsToPage.take(
-        this.pagedInResults.count() + this.pageSize
+      pagedInResults = resultsToPage.take(
+        pagedInResults.count() + this.pageSize
       );
-      this.pagerCallback(this.pagedInResults)
+      this.pagerCallback(pagedInResults)
 
       await this.delay(5);
     }
