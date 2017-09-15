@@ -33,14 +33,25 @@ function filterPapers(state, papers, filterName) {
 }
 
 class SearchablePaginatedPapersList extends React.PureComponent {
+  constructor(props) {
+    super(props)
+
+    // Note! I used to define these functional components inside
+    // render. But that meant that on re-render, React wasn't able
+    // to reconcile the new function with the previous one. So even
+    // if no props changed, everything got unmounted and remounted. Wow!
+    this.papersList = ({items}) => (
+      <PapersList papers={items} showAuthors={true}/>
+    );
+    this.pager = ({items}) => (
+      <Pager items={items} pageSize={1} component={this.papersList}/>
+    );
+  }
+
   render() {
     const {searchPapers} = this.props;
     return (
-      <Searcher searcher={searchPapers} component={({items}) => (
-        <Pager items={items} pageSize={1} component={({items}) => (
-          <PapersList papers={items} showAuthors={true}/>
-        )}/>
-      )}/>
+      <Searcher searcher={searchPapers} component={this.pager}/>
     );
   }
 }
