@@ -44,7 +44,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
       <PapersList papers={items} showAuthors={true}/>
     );
     this.pager = ({items}) => (
-      <Pager items={items} pageSize={1} component={this.papersList}/>
+      <Pager items={items} pageSize={20} component={this.papersList}/>
     );
   }
 

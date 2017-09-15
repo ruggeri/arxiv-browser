@@ -37,7 +37,7 @@ class SearchablePaginatedAuthorsList extends React.PureComponent {
       <AuthorsList authors={items}/>
     );
     this.pager = ({items}) => (
-      <Pager items={items} pageSize={1} component={this.authorsList}/>
+      <Pager items={items} pageSize={20} component={this.authorsList}/>
     );
   }
 
