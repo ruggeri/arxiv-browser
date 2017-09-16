@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+// This component saves the scroll position on unmount and restores it
+// on mount. The intent is to use this at the top level of a route, so
+// that it mounts once on navigation to the route, and unmounts once on
+// navigation away from the route.
 export class ScrollRestorer extends React.Component {
   static contextTypes = {
     getComponentState: PropTypes.func.isRequired,
@@ -28,6 +32,9 @@ export class ScrollRestorer extends React.Component {
     return `${this.context.componentStateKeyPath}/scrollPosition`;
   }
 
+  // Because the page may be dynamically built, it may be that not
+  // enough of the page has been loaded yet to restore to the correct
+  // position. So we'll try a number of times (and then give up).
   async restoreScrollPosition() {
     const targetScrollPosition = this.storedScrollPosition();
     if (targetScrollPosition) {
@@ -40,6 +47,8 @@ export class ScrollRestorer extends React.Component {
           setTimeout(resolve, ScrollRestorer.timeBetweenAttempts)
         });
       }
+
+      console.log("Gave up: could not restore scroll position.");
     }
   }
 
