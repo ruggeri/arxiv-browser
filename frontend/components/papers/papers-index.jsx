@@ -1,7 +1,7 @@
 import { fetchAllPapers } from 'actions/paper-actions';
 import PapersList from 'components/papers/shared/papers-list.jsx';
 import ComponentStateStore from 'helpers/component-state-store.jsx';
-import Pager from 'helpers/pager.jsx';
+import Pager from 'helpers/pager';
 import Searcher from 'helpers/searcher.jsx';
 import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred, searchPapers } from 'queries/paper';
 import React from 'react';
