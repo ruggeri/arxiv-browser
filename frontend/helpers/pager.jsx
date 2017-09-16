@@ -101,6 +101,9 @@ function buildUpdateSequence(currentItems, newItems) {
 
 class PagerHelper {
   constructor({pageSize, setCurrentItems}) {
+    // TODO: pageSize is probably not the correct approach. We probably
+    // want a time-limit, and perform as many or as few updates as we
+    // can in that limited time.
     if (!(pageSize > 0)) {
       throw `Why is pageSize ${JSON.stringify(pageSize)}?`
     }
