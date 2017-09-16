@@ -1,5 +1,6 @@
 import { fetchAllAuthors } from 'actions/author-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
+import ComponentStateStore from 'helpers/component-state-store.jsx';
 import Pager from 'helpers/pager.jsx';
 import Searcher from 'helpers/searcher.jsx';
 import React from 'react';
@@ -25,6 +26,8 @@ function filterAuthors(state, authors, filterName) {
   }
   return filterFn(state, authors);
 }
+
+const PersistableSearcher = ComponentStateStore.connect(Searcher);
 
 class SearchablePaginatedAuthorsList extends React.PureComponent {
   constructor(props) {
@@ -52,7 +55,7 @@ class SearchablePaginatedAuthorsList extends React.PureComponent {
     }
 
     return (
-      <Searcher searcher={searchAuthors} component={this.pager}/>
+      <PersistableSearcher searcher={searchAuthors} component={this.pager} kkey="searcher"/>
     );
   }
 }
