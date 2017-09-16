@@ -38,16 +38,15 @@ function componentStateReducer(state = Map(), action) {
 class ComponentStateProvider extends React.Component {
   constructor(props) {
     super(props);
-
-    this.childContext = {
-      componentStateKeyPath: "/",
-      getComponentState: this.getComponentState.bind(this),
-      saveComponentState: this.saveComponentState.bind(this),
-    };
   }
 
   getChildContext() {
-    return this.childContext;
+    const historyKey = this.context.router.history.location.key
+    return {
+      componentStateKeyPath: `/${historyKey}`,
+      getComponentState: this.getComponentState.bind(this),
+      saveComponentState: this.saveComponentState.bind(this),
+    };
   }
 
   render() {
@@ -76,13 +75,14 @@ ComponentStateProvider.childContextTypes = {
 };
 
 ComponentStateProvider.contextTypes = {
+  router: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
 }
 
 class ComponentStateScope extends React.Component {
   getChildContext() {
     const currentKeyPath = this.context.componentStateKeyPath;
-    const childKeyPath = currentKeyPath + "/" + this.props.kkey;
+    const childKeyPath = `${currentKeyPath}/${this.props.kkey}`;
     return {
       componentStateKeyPath: childKeyPath
     };
@@ -115,7 +115,7 @@ class StatefulComponent extends React.Component {
   }
 
   keyPath() {
-    return this.context.componentStateKeyPath + "/" + this.props.kkey;
+    return `${this.context.componentStateKeyPath}/${this.props.kkey}`;
   }
 
   render() {
