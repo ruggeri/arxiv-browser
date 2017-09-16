@@ -1,9 +1,17 @@
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
+import * as ReactRedux from 'react-redux';
 
+const CLEAR_COMPONENT_STATE = 'CLEAR_COMPONENT_STATE';
 const SAVE_COMPONENT_STATE = 'SAVE_COMPONENT_STATE';
+
+function clearComponentState(keyPath) {
+  return {
+    type: CLEAR_COMPONENT_STATE,
+    keyPath: keyPath,
+  };
+}
 
 function saveComponentState(keyPath, state) {
   return {
@@ -15,8 +23,10 @@ function saveComponentState(keyPath, state) {
 
 function componentStateReducer(state = Map(), action) {
   switch (action.type) {
+  case CLEAR_COMPONENT_STATE:
+    state = state.delete(action.keyPath);
   case SAVE_COMPONENT_STATE:
-    state.set(action.keyPath, action.state);
+    state = state.set(action.keyPath, action.state);
   }
 
   return state;
@@ -29,6 +39,7 @@ class ComponentStateProvider extends React.Component {
   getChildContext() {
     return {
       componentStateKeyPath: "/",
+      getComponentState: this.getComponentState.bind(this),
       saveComponentState: this.saveComponentState.bind(this),
     };
   }
@@ -39,21 +50,33 @@ class ComponentStateProvider extends React.Component {
     )
   }
 
+  clearComponentState(keyPath) {
+    this.props.clearComponentState(keyPath);
+  }
+
+  getComponentState(keyPath) {
+    return this.props.getComponentState(keyPath);
+  }
+
   saveComponentState(keyPath, state) {
     this.props.saveComponentState(keyPath, state)
   }
 }
 
 ComponentStateProvider.childContextTypes = {
-  componentStateKeyPath: PropTypes.string,
-  saveComponentState: PropTypes.func,
+  componentStateKeyPath: PropTypes.string.isRequired,
+  getComponentState: PropTypes.func.isRequired,
+  saveComponentState: PropTypes.func.isRequired,
 };
 
-ComponentStateProvider = connect(
+ComponentStateProvider = ReactRedux.connect(
   state => ({
-    getStateForKeyPath: keyPath => state.componentState.get(keyPath),
+    getComponentState: keyPath => {
+      return state.componentState.get(keyPath)
+    },
   }),
   dispatch => ({
+    clearComponentState: (keyPath) => dispatch(clearComponentState(keyPath)),
     saveComponentState: (keyPath, state) => dispatch(saveComponentState(keyPath, state))
   })
 )(ComponentStateProvider);
@@ -61,42 +84,49 @@ ComponentStateProvider = connect(
 class ComponentStateScope extends React.Component {
   getChildContext() {
     const currentKeyPath = this.context.componentStateKeyPath;
-    const childKeyPath = currentKeyPath + "/" + this.props.key;
-    return {
+    const childKeyPath = currentKeyPath + "/" + this.props.kkey;
+    return Object.assign({}, this.context, {
       componentStateKeyPath: childKeyPath
-    };
+    });
   }
 }
 
-// TODO: Unclear how to handle initial state if nothing is stored at present.
-// TODO: should attempt to clear the stateStore on unmounting.
+ComponentStateScope.propTypes = {
+  kkey: PropTypes.string.isRequired,
+};
+ComponentStateScope.childContextTypes = {
+  componentStateKeyPath: PropTypes.string.isRequired,
+  getComponentState: PropTypes.func.isRequired,
+  saveComponentState: PropTypes.func.isRequired,
+};
+
 class StatefulComponent extends React.Component {
-  componentWillMount() {
-    this.setState({
-      childState: this.context.getStateForKeyPath(
-        this.context.componentStateKeyPath + "/" + this.key
-      ),
-    });
+  constructor(props) {
+    super(props);
+
+    this.clearPersistedChildState = () => {
+      this.context.clearComponentState(this.keyPath());
+    };
+    this.getPersistedChildState = () => {
+      return this.context.getComponentState(this.keyPath());
+    };
+    this.persistChildState = (newState) => {
+      this.context.saveComponentState(this.keyPath(), newState);
+    }
   }
 
-  setChildState(newState) {
-    this.setState({
-      childState: {
-        ...this.state.childState,
-        ...newState
-      }
-    }, () => {
-      this.context.saveComponentState(this.state.childState);
-    });
+  keyPath() {
+    return this.context.componentStateKeyPath + "/" + this.props.kkey;
   }
 
   render() {
-    const child = this.children[0];
+    const child = this.props.children;
     const extendedChild = React.cloneElement(
       child,
       {
-        setState: this.setChildState.bind(this),
-        state: this.state.childState,
+        clearPersistedState: this.clearPersistedChildState,
+        getPersistedState: this.getPersistedChildState,
+        persistState: this.persistChildState,
       }
     );
 
@@ -106,11 +136,71 @@ class StatefulComponent extends React.Component {
 
 StatefulComponent.propTypes = {
   children: PropTypes.element.isRequired,
+  kkey: PropTypes.string.isRequired,
 };
+
+StatefulComponent.contextTypes = {
+  componentStateKeyPath: PropTypes.string.isRequired,
+  getComponentState: PropTypes.func.isRequired,
+  saveComponentState: PropTypes.func.isRequired,
+};
+
+function connect(component) {
+  class ExtendedComponent extends component {
+    componentWillMount() {
+      const persistedState = this.props.getPersistedState();
+      if (persistedState) {
+        super.setState(persistedState);
+      }
+    }
+
+    setState(newState, callback) {
+      super.setState(newState, () => {
+        this.props.persistState(this.state);
+        if (callback) {
+          callback();
+        }
+      });
+    }
+
+    componentWillUnmount() {
+      // TODO: I think I want to clear the state?
+    }
+  }
+
+  class WrapperComponent extends React.Component {
+    render() {
+      return (
+        <StatefulComponent kkey={this.props.kkey}>
+          <ExtendedComponent {...this.props}/>
+        </StatefulComponent>
+      )
+    }
+  }
+
+  // TODO: Maybe should copy original PropTypes?
+  WrapperComponent.propTypes = {
+    kkey: PropTypes.string.isRequired,
+  };
+
+  return WrapperComponent;
+}
+
+// TODO: maybe write a mixin method or something that can derive an
+// existing stateful class to use this functionality.
 
 export {
   ComponentStateProvider,
   componentStateReducer,
   ComponentStateScope,
-  connectStatefulComponent,
+  StatefulComponent,
+  connect,
 };
+
+export default {
+  ComponentStateProvider,
+  componentStateReducer,
+  ComponentStateScope,
+  StatefulComponent,
+  connect,
+}
