@@ -1,4 +1,5 @@
 import { Map } from 'immutable';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -32,10 +33,21 @@ class ComponentStateProvider extends React.Component {
     };
   }
 
+  render() {
+    return (
+      <div>{this.props.children}</div>
+    )
+  }
+
   saveComponentState(keyPath, state) {
     this.props.saveComponentState(keyPath, state)
   }
 }
+
+ComponentStateProvider.childContextTypes = {
+  componentStateKeyPath: PropTypes.string,
+  saveComponentState: PropTypes.func,
+};
 
 ComponentStateProvider = connect(
   state => ({
@@ -56,29 +68,45 @@ class ComponentStateScope extends React.Component {
   }
 }
 
-function connectStatefulComponent(component) {
-  function getSavedState() {
-    return this.context.getStateForKeyPath(
-      component.context.componentStateKeyPath
-    );
+// TODO: Unclear how to handle initial state if nothing is stored at present.
+// TODO: should attempt to clear the stateStore on unmounting.
+class StatefulComponent extends React.Component {
+  componentWillMount() {
+    this.setState({
+      childState: this.context.getStateForKeyPath(
+        this.context.componentStateKeyPath + "/" + this.key
+      ),
+    });
   }
 
-  const oldComponentWillMount = component.componentWillMount.bind(component);
-  component.componentWillMount = function () {
-    this.oldSetState(getSavedState());
-    oldComponentWillMount();
-  };
-
-  const oldSetState = component.setState.bind(component);
-  component.setState = function (update, callback) {
-    oldSetState(update, () => {
-      this.context.saveComponentState(this.state);
-      callback();
+  setChildState(newState) {
+    this.setState({
+      childState: {
+        ...this.state.childState,
+        ...newState
+      }
+    }, () => {
+      this.context.saveComponentState(this.state.childState);
     });
-  };
+  }
 
-  // TODO: should attempt to clear the stateStore on unmounting.
+  render() {
+    const child = this.children[0];
+    const extendedChild = React.cloneElement(
+      child,
+      {
+        setState: this.setChildState.bind(this),
+        state: this.state.childState,
+      }
+    );
+
+    return extendedChild;
+  }
 }
+
+StatefulComponent.propTypes = {
+  children: PropTypes.element.isRequired,
+};
 
 export {
   ComponentStateProvider,
