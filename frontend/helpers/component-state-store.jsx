@@ -41,7 +41,7 @@ class ComponentStateProvider extends React.Component {
   }
 
   getChildContext() {
-    const historyKey = this.context.router.history.location.key
+    const historyKey = this.context.router.history.location.key;
     return {
       clearComponentState: this.clearComponentState.bind(this),
       componentStateKeyPath: `/${historyKey}`,
@@ -57,6 +57,13 @@ class ComponentStateProvider extends React.Component {
   }
 
   clearComponentState(keyPath) {
+    const currentHistoryKey = this.context.router.history.location.key;
+    if (!keyPath.startsWith(`/${currentHistoryKey}`)) {
+      // This clear event is due to a history transition. We don't want
+      // to perform it.
+      return;
+    }
+
     this.context.store.dispatch(clearComponentState(keyPath));
   }
 
@@ -166,9 +173,7 @@ function connect(component) {
     }
 
     componentWillUnmount() {
-      // TODO: Won't work yet; we need a way to know whether we're
-      // unmounting because of a navigation.
-      // this.props.clearPersistedState();
+      this.props.clearPersistedState();
     }
   }
 
