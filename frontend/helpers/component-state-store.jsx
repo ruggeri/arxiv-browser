@@ -21,6 +21,9 @@ function componentStateReducer(state = Map(), action) {
   return state;
 }
 
+// TODO: Needs to hook in with the history from react-router to store
+// under the appropriate keyPath. The history.key needs to be part of
+// the keyPath.
 class ComponentStateProvider extends React.Component {
   getChildContext() {
     return {
@@ -73,6 +76,8 @@ function connectStatefulComponent(component) {
       callback();
     });
   };
+
+  // TODO: should attempt to clear the stateStore on unmounting.
 }
 
 export {
