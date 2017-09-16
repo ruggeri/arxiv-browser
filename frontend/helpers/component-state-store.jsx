@@ -36,12 +36,18 @@ function componentStateReducer(state = Map(), action) {
 // under the appropriate keyPath. The history.key needs to be part of
 // the keyPath.
 class ComponentStateProvider extends React.Component {
-  getChildContext() {
-    return {
+  constructor(props) {
+    super(props);
+
+    this.childContext = {
       componentStateKeyPath: "/",
       getComponentState: this.getComponentState.bind(this),
       saveComponentState: this.saveComponentState.bind(this),
     };
+  }
+
+  getChildContext() {
+    return this.childContext;
   }
 
   render() {
@@ -51,15 +57,15 @@ class ComponentStateProvider extends React.Component {
   }
 
   clearComponentState(keyPath) {
-    this.props.clearComponentState(keyPath);
+    this.context.store.dispatch(clearComponentState(keyPath));
   }
 
   getComponentState(keyPath) {
-    return this.props.getComponentState(keyPath);
+    return this.context.store.getState().componentState.get(keyPath);
   }
 
   saveComponentState(keyPath, state) {
-    this.props.saveComponentState(keyPath, state)
+    this.context.store.dispatch(saveComponentState(keyPath, state));
   }
 }
 
@@ -69,17 +75,9 @@ ComponentStateProvider.childContextTypes = {
   saveComponentState: PropTypes.func.isRequired,
 };
 
-ComponentStateProvider = ReactRedux.connect(
-  state => ({
-    getComponentState: keyPath => {
-      return state.componentState.get(keyPath)
-    },
-  }),
-  dispatch => ({
-    clearComponentState: (keyPath) => dispatch(clearComponentState(keyPath)),
-    saveComponentState: (keyPath, state) => dispatch(saveComponentState(keyPath, state))
-  })
-)(ComponentStateProvider);
+ComponentStateProvider.contextTypes = {
+  store: PropTypes.object.isRequired,
+}
 
 class ComponentStateScope extends React.Component {
   getChildContext() {
