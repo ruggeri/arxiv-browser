@@ -43,6 +43,7 @@ class ComponentStateProvider extends React.Component {
   getChildContext() {
     const historyKey = this.context.router.history.location.key
     return {
+      clearComponentState: this.clearComponentState.bind(this),
       componentStateKeyPath: `/${historyKey}`,
       getComponentState: this.getComponentState.bind(this),
       saveComponentState: this.saveComponentState.bind(this),
@@ -69,6 +70,7 @@ class ComponentStateProvider extends React.Component {
 }
 
 ComponentStateProvider.childContextTypes = {
+  clearComponentState: PropTypes.func.isRequired,
   componentStateKeyPath: PropTypes.string.isRequired,
   getComponentState: PropTypes.func.isRequired,
   saveComponentState: PropTypes.func.isRequired,
@@ -139,6 +141,7 @@ StatefulComponent.propTypes = {
 };
 
 StatefulComponent.contextTypes = {
+  clearComponentState: PropTypes.func.isRequired,
   componentStateKeyPath: PropTypes.string.isRequired,
   getComponentState: PropTypes.func.isRequired,
   saveComponentState: PropTypes.func.isRequired,
@@ -163,7 +166,9 @@ function connect(component) {
     }
 
     componentWillUnmount() {
-      // TODO: I think I want to clear the state?
+      // TODO: Won't work yet; we need a way to know whether we're
+      // unmounting because of a navigation.
+      // this.props.clearPersistedState();
     }
   }
 
