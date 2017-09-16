@@ -83,19 +83,20 @@ class ComponentStateScope extends React.Component {
   getChildContext() {
     const currentKeyPath = this.context.componentStateKeyPath;
     const childKeyPath = currentKeyPath + "/" + this.props.kkey;
-    return Object.assign({}, this.context, {
+    return {
       componentStateKeyPath: childKeyPath
-    });
+    };
   }
 }
 
 ComponentStateScope.propTypes = {
   kkey: PropTypes.string.isRequired,
 };
+ComponentStateScope.contextTypes = {
+  componentStateKeyPath: PropTypes.string.isRequired
+};
 ComponentStateScope.childContextTypes = {
   componentStateKeyPath: PropTypes.string.isRequired,
-  getComponentState: PropTypes.func.isRequired,
-  saveComponentState: PropTypes.func.isRequired,
 };
 
 class StatefulComponent extends React.Component {
@@ -110,7 +111,7 @@ class StatefulComponent extends React.Component {
     };
     this.persistChildState = (newState) => {
       this.context.saveComponentState(this.keyPath(), newState);
-    }
+    };
   }
 
   keyPath() {
@@ -183,9 +184,6 @@ function connect(component) {
 
   return WrapperComponent;
 }
-
-// TODO: maybe write a mixin method or something that can derive an
-// existing stateful class to use this functionality.
 
 export {
   ComponentStateProvider,
