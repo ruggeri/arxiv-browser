@@ -195,10 +195,41 @@ function connect(component) {
   return WrapperComponent;
 }
 
+class ScrollRestorer extends React.Component {
+  async componentWillMount() {
+    const targetScrollPosition = this.context.getComponentState("scrollPosition");
+    if (targetScrollPosition) {
+      for (let iter = 0; iter < 10; iter += 1) {
+        const targetScrollBottom = targetScrollPosition + document.body.clientHeight;
+
+        if (document.body.scrollHeight >= targetScrollBottom) {
+          window.scroll(0, targetScrollPosition);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.context.saveComponentState("scrollPosition", window.scrollY);
+  }
+
+  render() {
+    return null;
+  }
+}
+
+ScrollRestorer.contextTypes = {
+  getComponentState: PropTypes.func.isRequired,
+  saveComponentState: PropTypes.func.isRequired,
+};
+
 export {
   ComponentStateProvider,
   componentStateReducer,
   ComponentStateScope,
+  ScrollRestorer,
   StatefulComponent,
   connect,
 };
@@ -207,6 +238,7 @@ export default {
   ComponentStateProvider,
   componentStateReducer,
   ComponentStateScope,
+  ScrollRestorer,
   StatefulComponent,
   connect,
 }

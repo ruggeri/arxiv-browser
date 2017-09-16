@@ -70,6 +70,7 @@ class AuthorsIndex extends React.PureComponent {
 
     return (
       <div>
+        <ComponentStateStore.ScrollRestorer/>
         <h1>There are {authors.count()} authors in the archive!</h1>
         <SearchablePaginatedAuthorsList authors={authors}/>
       </div>

@@ -69,6 +69,7 @@ class PapersIndex extends React.PureComponent {
 
     return (
       <div>
+        <ComponentStateStore.ScrollRestorer/>
         <h1>There are {papers.count()} papers in the archive!</h1>
         <SearchablePaginatedPapersList {...this.props}/>
       </div>
