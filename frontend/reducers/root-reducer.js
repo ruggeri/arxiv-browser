@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { enableBatching } from 'redux-batched-actions';
 
-import { componentStateReducer } from 'helpers/component-state-store.jsx';
+import { componentStateReducer } from 'helpers/component-state-store';
 import authorsReducer from 'reducers/authors-reducer';
 import authorshipsReducer from 'reducers/authorships-reducer';
 import authorStatusesReducer from 'reducers/author-statuses-reducer';

@@ -3,7 +3,7 @@ import PapersIndex from 'components/papers/papers-index.jsx';
 import PaperShow from 'components/papers/paper-show.jsx';
 import AuthorShow from 'components/authors/author-show.jsx';
 import AuthorsIndex from 'components/authors/authors-index.jsx';
-import { ComponentStateProvider } from 'helpers/component-state-store.jsx'
+import { ComponentStateProvider } from 'helpers/component-state-store';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
