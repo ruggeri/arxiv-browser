@@ -2,7 +2,7 @@ import {List} from 'immutable';
 import _ from 'lodash';
 import React from 'react';
 
-class Searcher extends React.PureComponent {
+class Searcher extends React.Component {
   constructor(props) {
     super(props);
 

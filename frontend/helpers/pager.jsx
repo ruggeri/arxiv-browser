@@ -144,7 +144,7 @@ class PagerHelper {
   }
 }
 
-class Pager extends React.PureComponent {
+class Pager extends React.Component {
   constructor(props) {
     super(props);
 
