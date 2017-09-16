@@ -48,6 +48,15 @@ function applyUpdateSequence(updateSequence, currentItems) {
 
 // This builds a sequence of updates to transform, one-by-one,
 // currentItems toward newItems.
+//
+// The algorithm is to iterate through both lists. If the currentItem
+// should be removed, we remove it. Otherwise, if in the newItems lists
+// an item should come before the currentItem, the new item should
+// either (1) be inserted if it was not previously in the original list
+// or (2) moved forward in the list if it does already exist.
+//
+// We repeat this, transforming currentItems one-by-one, and each time
+// recording the change we made.
 function buildUpdateSequence(currentItems, newItems) {
   let updateSequence = List();
 
@@ -99,7 +108,14 @@ function buildUpdateSequence(currentItems, newItems) {
   return updateSequence;
 }
 
+// `PageHelper#pageIn(currentItems, newItems)` first calculates updates
+// that must be made to transform currentItems to newItems. It then
+// performs these in chunks, each time calling `this.setCurrentItems`
+// to let the user of the class update their state with the
+// intermediate transformed list.
 class PagerHelper {
+  static delayTime = 1;
+
   constructor({pageSize, setCurrentItems}) {
     // TODO: pageSize is probably not the correct approach. We probably
     // want a time-limit, and perform as many or as few updates as we
@@ -135,7 +151,7 @@ class PagerHelper {
       this.setCurrentItems(currentItems);
       updateSequence = updateSequence.skip(this.pageSize);
 
-      await this.delay(1);
+      await this.delay(PagerHelper.delayTime);
     }
   }
 
@@ -144,6 +160,20 @@ class PagerHelper {
   }
 }
 
+// The Pager is a React Higher-Order component that "phases in" updates
+// to a list of items. When `props.items` changes, the Pager
+// incrementally updates `state.items` using the PagerHelper class.
+// It is `state.items` that gets passed to the wrapped component.
+//
+// This helps because when a large number of items in a list changes,
+// that can entail unmounting a lot of old item components and mounting
+// a bunch of new ones. That can be very slow. And because that blocks
+// the main thread, the user experiences lockup until React is done
+// updating.
+//
+// The Pager HOC breaks this up into small incremental chunks of updates
+// each of which should execute quickly and allow user interaction to
+// interleave with the updates.
 class Pager extends React.Component {
   constructor(props) {
     super(props);
