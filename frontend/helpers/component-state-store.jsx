@@ -32,9 +32,6 @@ function componentStateReducer(state = Map(), action) {
   return state;
 }
 
-// TODO: Needs to hook in with the history from react-router to store
-// under the appropriate keyPath. The history.key needs to be part of
-// the keyPath.
 class ComponentStateProvider extends React.Component {
   constructor(props) {
     super(props);
@@ -196,23 +193,52 @@ function connect(component) {
 }
 
 class ScrollRestorer extends React.Component {
-  async componentWillMount() {
-    const targetScrollPosition = this.context.getComponentState("scrollPosition");
+  static maxAttempts = 20;
+  static timeBetweenAttempts = 20;
+
+  attemptToRestoreScroll(targetScrollPosition) {
+    if (this.isDocumentLongEnoughToRestoreScroll(targetScrollPosition)) {
+      window.scroll(0, targetScrollPosition);
+      return true;
+    }
+
+    return false;
+  }
+
+  isDocumentLongEnoughToRestoreScroll(targetScrollPosition) {
+    const targetScrollBottom = targetScrollPosition + document.body.clientHeight;
+    return document.body.scrollHeight >= targetScrollBottom
+  }
+
+  keyPath() {
+    return `${this.context.componentStateKeyPath}/scrollPosition`;
+  }
+
+  async restoreScrollPosition() {
+    const targetScrollPosition = this.storedScrollPosition();
     if (targetScrollPosition) {
-      for (let iter = 0; iter < 10; iter += 1) {
-        const targetScrollBottom = targetScrollPosition + document.body.clientHeight;
-
-        if (document.body.scrollHeight >= targetScrollBottom) {
-          window.scroll(0, targetScrollPosition);
+      for (let iter = 0; iter < ScrollRestorer.maxAttempts; iter += 1) {
+        const didRestore = this.attemptToRestoreScroll(targetScrollPosition);
+        if (didRestore) {
+          return;
         }
-
-        await new Promise(resolve => setTimeout(resolve, 20));
+        await new Promise(resolve => {
+          setTimeout(resolve, ScrollRestorer.timeBetweenAttempts)
+        });
       }
     }
   }
 
+  storedScrollPosition() {
+    return this.context.getComponentState(this.keyPath());
+  }
+
+  componentWillMount() {
+    this.restoreScrollPosition();
+  }
+
   componentWillUnmount() {
-    this.context.saveComponentState("scrollPosition", window.scrollY);
+    this.context.saveComponentState(this.keyPath(), window.scrollY);
   }
 
   render() {
@@ -222,6 +248,7 @@ class ScrollRestorer extends React.Component {
 
 ScrollRestorer.contextTypes = {
   getComponentState: PropTypes.func.isRequired,
+  componentStateKeyPath: PropTypes.string.isRequired,
   saveComponentState: PropTypes.func.isRequired,
 };
 
