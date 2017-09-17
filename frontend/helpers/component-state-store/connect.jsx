@@ -14,6 +14,13 @@ import { StatefulComponent } from './stateful-component.jsx';
 // the component re-mounts on navigation back, the spinner may be shown
 // again, waiting for an AJAX response that will now never return.
 export function connect(component) {
+  if (!component.prototype.isReactComponent) {
+    // Connect needs to replace methods directly on the stateful
+    // component class. So if it is hidden behind a functional
+    // component, which happens a lot with wrapper classes, then
+    // we won't be able to install these methods properly.
+    throw "You cannot connect to a functional component!";
+  }
   class ExtendedComponent extends component {
     componentWillMount() {
       if (super.componentWillMount) {
