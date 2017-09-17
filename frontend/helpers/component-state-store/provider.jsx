@@ -1,6 +1,7 @@
 import { clearComponentState, saveComponentState } from './actions';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withRouter } from 'react-router';
 
 // The Provider component provides as context to all descendent React
 // elements functions for getting, saving, and clearing component
@@ -14,7 +15,7 @@ import React from 'react';
 // backward and forward through browser history, the component is able
 // to load the specific version of its state that it saved for that
 // history location.
-export class ComponentStateProvider extends React.Component {
+class ComponentStateProvider extends React.Component {
   static childContextTypes = {
     clearComponentState: PropTypes.func.isRequired,
     componentStateKeyPath: PropTypes.string.isRequired,
@@ -23,7 +24,6 @@ export class ComponentStateProvider extends React.Component {
   };
 
   static contextTypes = {
-    router: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,
   };
 
@@ -32,7 +32,7 @@ export class ComponentStateProvider extends React.Component {
   }
 
   getChildContext() {
-    const historyKey = this.context.router.history.location.key;
+    const historyKey = this.props.location.key;
     return {
       clearComponentState: this.clearComponentState.bind(this),
       componentStateKeyPath: `/${historyKey}`,
@@ -48,7 +48,7 @@ export class ComponentStateProvider extends React.Component {
   }
 
   clearComponentState(keyPath) {
-    const currentHistoryKey = this.context.router.history.location.key;
+    const currentHistoryKey = this.props.location.key;
     if (!keyPath.startsWith(`/${currentHistoryKey}`)) {
       // It is expected that components may want to clear the component
       // state when they unmount. There should be one special exception:
@@ -80,3 +80,9 @@ export class ComponentStateProvider extends React.Component {
     this.context.store.dispatch(saveComponentState(keyPath, state));
   }
 }
+
+ComponentStateProvider = withRouter(ComponentStateProvider);
+
+export {
+  ComponentStateProvider,
+};

@@ -1,6 +1,6 @@
 import { connect } from './connect.jsx';
 import { ComponentStateProvider } from './provider.jsx';
-import { componentStateReducer } from './reducer.js';
+import { componentStateReducer, getPersistedComponentState } from './reducer.js';
 import { ScrollRestorer } from './scroll-restorer.jsx';
 import { ComponentStateScope } from './state-scope.jsx';
 import { StatefulComponent } from './stateful-component.jsx';
@@ -10,6 +10,7 @@ export {
   componentStateReducer,
   ComponentStateScope,
   connect,
+  getPersistedComponentState,
   ScrollRestorer,
   StatefulComponent,
 };
@@ -19,6 +20,7 @@ export default {
   componentStateReducer,
   ComponentStateScope,
   connect,
+  getPersistedComponentState,
   ScrollRestorer,
   StatefulComponent,
 }
