@@ -5,6 +5,7 @@ import PaperItem from 'components/papers/shared/paper-item.jsx';
 import Scroller from 'helpers/scroller';
 import { List } from 'immutable';
 import _ from 'lodash';
+import mousetrap from 'mousetrap';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -23,25 +24,27 @@ class PapersList extends React.PureComponent {
 
   componentDidMount() {
     this.scroller.bind();
-    this.handler = (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        return;
-      } else if (e.key == "s") {
-        this.props.togglePaperStar(this.selectedPaper().get('id'));
-      } else if (e.key == "e") {
-        this.props.togglePaperArchived(this.selectedPaper().get('id'));
-      } else if (e.key == "o") {
-        const link = this.selectedPaper().get('link');
-        window.open(link, '_blank');
-      }
-    }
 
-    $(document.body).keydown(this.handler);
+    mousetrap.bind('s', () => {
+      this.props.togglePaperStar(this.selectedPaper().get('id'));
+    });
+    mousetrap.bind('e', () => {
+      this.props.togglePaperArchived(this.selectedPaper().get('id'));
+    });
+    mousetrap.bind('O', () => {
+      const link = this.selectedPaper().get('link');
+      window.open(link, '_blank');
+    });
+    mousetrap.bind('o', () => {
+      // TODO: won't work until we use ReactRouter#withRouter.
+      const paperId = this.selectedPaper().get('id');
+      this.props.history.push(`/papers/${paperId}`);
+    });
   }
 
   componentWillUnmount() {
     this.scroller.unbind();
-    $(document.body).off("keydown", this.handler);
+    ['s', 'e', 'O', 'o'].forEach((k) => mousetrap.unbind(k));
   }
 
   selectedPaper() {
