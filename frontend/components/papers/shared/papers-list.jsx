@@ -31,7 +31,8 @@ class PapersList extends React.PureComponent {
       } else if (e.key == "e") {
         this.props.togglePaperArchived(this.selectedPaper().get('id'));
       } else if (e.key == "o") {
-        console.log("Open this!")
+        const link = this.selectedPaper().get('link');
+        window.open(link, '_blank');
       }
     }
 
