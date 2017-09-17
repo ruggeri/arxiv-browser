@@ -21,11 +21,16 @@ class Searcher extends React.Component {
   }
 
   matchedItems() {
-    if (this.state.query === "") {
+    if (this.props.requirePositiveInput && this.state.query === "") {
       return List();
     }
 
-    return this.props.searcher(this.state.query);
+    let matchedItems = this.props.searcher(this.state.query);
+    if (this.props.resultsLimit) {
+      matchedItems = matchedItems.take(this.props.resultsLimit);
+    }
+
+    return matchedItems;
   }
 
   render() {

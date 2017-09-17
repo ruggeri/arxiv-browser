@@ -55,7 +55,12 @@ class SearchablePaginatedAuthorsList extends React.PureComponent {
     }
 
     return (
-      <PersistableSearcher searcher={searchAuthors} component={this.pager} kkey="searcher"/>
+      <PersistableSearcher
+        searcher={searchAuthors}
+        component={this.pager}
+        kkey="searcher"
+        resultsLimit={20}
+      />
     );
   }
 }
