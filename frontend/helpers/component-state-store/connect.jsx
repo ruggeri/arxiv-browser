@@ -16,6 +16,10 @@ import { StatefulComponent } from './stateful-component.jsx';
 export function connect(component) {
   class ExtendedComponent extends component {
     componentWillMount() {
+      if (super.componentWillMount) {
+        super.componentWillMount();
+      }
+
       const persistedState = this.props.getPersistedState();
       if (persistedState) {
         super.setState(persistedState);
@@ -32,6 +36,10 @@ export function connect(component) {
     }
 
     componentWillUnmount() {
+      if (super.componentWillUnmount) {
+        super.componentWillUnmount();
+      }
+
       this.props.clearPersistedState();
     }
   }
