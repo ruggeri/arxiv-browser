@@ -1,3 +1,4 @@
+import ComponentStateStore from 'helpers/component-state-store';
 import {List} from 'immutable';
 import _ from 'lodash';
 import React from 'react';
@@ -48,4 +49,9 @@ class Searcher extends React.Component {
   }
 }
 
-export default Searcher;
+const PersistableSearcher = ComponentStateStore.connect(Searcher);
+
+export {
+  PersistableSearcher,
+  Searcher
+};

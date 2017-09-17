@@ -2,7 +2,7 @@ import { fetchAllPapers } from 'actions/paper-actions';
 import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
-import Searcher from 'helpers/searcher.jsx';
+import { PersistableSearcher } from 'helpers/searcher.jsx';
 import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred, searchPapers } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -33,8 +33,6 @@ function filterPapers(state, papers, filterName) {
   return filterFn(state, papers);
 }
 
-const ConnectedSearcher = ComponentStateStore.connect(Searcher);
-
 class SearchablePaginatedPapersList extends React.PureComponent {
   constructor(props) {
     super(props)
@@ -54,7 +52,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
   render() {
     const {searchPapers} = this.props;
     return (
-      <ConnectedSearcher searcher={searchPapers} component={this.pager} kkey="searcher"/>
+      <PersistableSearcher searcher={searchPapers} component={this.pager} kkey="searcher"/>
     );
   }
 }
