@@ -33,7 +33,8 @@ function filterPapers(state, papers, filterName) {
   return filterFn(state, papers);
 }
 
-const PersistableSearcher = ComponentStateStore.connect(Searcher);
+const ConnectedPapersList = ComponentStateStore.connect(PapersList);
+const ConnectedSearcher = ComponentStateStore.connect(Searcher);
 
 class SearchablePaginatedPapersList extends React.PureComponent {
   constructor(props) {
@@ -44,7 +45,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
     // to reconcile the new function with the previous one. So even
     // if no props changed, everything got unmounted and remounted. Wow!
     this.papersList = ({items}) => (
-      <PapersList papers={items} showAuthors={true}/>
+      <ConnectedPapersList papers={items} showAuthors={true} kkey="papers-list"/>
     );
     this.pager = ({items}) => (
       <Pager items={items} pageSize={5} component={this.papersList}/>
@@ -54,7 +55,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
   render() {
     const {searchPapers} = this.props;
     return (
-      <PersistableSearcher searcher={searchPapers} component={this.pager} kkey="searcher"/>
+      <ConnectedSearcher searcher={searchPapers} component={this.pager} kkey="searcher"/>
     );
   }
 }
