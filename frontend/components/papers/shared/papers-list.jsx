@@ -2,12 +2,14 @@ import { togglePaperStar } from 'actions/paper-status-actions';
 import { togglePaperArchived } from 'actions/paper-status-actions';
 import classNames from 'classnames';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
+import ComponentStateStore from 'helpers/component-state-store';
 import Scroller from 'helpers/scroller';
 import { List } from 'immutable';
 import _ from 'lodash';
 import mousetrap from 'mousetrap';
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect as reactReduxConnect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 class PapersList extends React.PureComponent {
   constructor(props) {
@@ -85,12 +87,24 @@ class PapersList extends React.PureComponent {
   }
 }
 
-PapersList = connect(
-  (state) => ({}),
-  (dispatch) => ({
-    togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
-    togglePaperArchived: paperId => dispatch(togglePaperArchived(paperId)),
-  }),
-)(PapersList)
+let PersistablePapersList = ComponentStateStore.connect(PapersList);
 
-export default PapersList;
+function connect(component) {
+  component = withRouter(component);
+  component = reactReduxConnect(
+    (state) => ({}),
+    (dispatch) => ({
+      togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
+      togglePaperArchived: paperId => dispatch(togglePaperArchived(paperId)),
+    }),
+  )(component)
+  return component;
+}
+
+PapersList = connect(PapersList);
+PersistablePapersList = connect(PersistablePapersList);
+
+export {
+  PapersList,
+  PersistablePapersList,
+};

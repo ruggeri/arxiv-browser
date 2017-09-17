@@ -1,5 +1,5 @@
 import { fetchAuthor } from 'actions/author-actions';
-import PapersList from 'components/papers/shared/papers-list.jsx';
+import { PapersList } from 'components/papers/shared/papers-list.jsx';
 import AuthorStar from 'components/authors/shared/author-star.jsx';
 import { getAuthorById } from 'queries/author';
 import { papersForAuthor } from 'queries/paper';
