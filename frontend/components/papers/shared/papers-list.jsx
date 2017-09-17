@@ -1,9 +1,12 @@
+import { togglePaperStar } from 'actions/paper-status-actions';
+import { togglePaperArchived } from 'actions/paper-status-actions';
 import classNames from 'classnames';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import Scroller from 'helpers/scroller';
 import { List } from 'immutable';
 import _ from 'lodash';
 import React from 'react';
+import { connect } from 'react-redux';
 
 class PapersList extends React.PureComponent {
   constructor(props) {
@@ -20,10 +23,28 @@ class PapersList extends React.PureComponent {
 
   componentDidMount() {
     this.scroller.bind();
+    this.handler = (e) => {
+      if (e.target instanceof HTMLInputElement) {
+        return;
+      } else if (e.key == "s") {
+        this.props.togglePaperStar(this.selectedPaper().get('id'));
+      } else if (e.key == "e") {
+        this.props.togglePaperArchived(this.selectedPaper().get('id'));
+      } else if (e.key == "o") {
+        console.log("Open this!")
+      }
+    }
+
+    $(document.body).keydown(this.handler);
   }
 
   componentWillUnmount() {
     this.scroller.unbind();
+    $(document.body).off("keydown", this.handler);
+  }
+
+  selectedPaper() {
+    return this.props.papers.get(this.state.selectedIndex);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -59,5 +80,13 @@ class PapersList extends React.PureComponent {
     );
   }
 }
+
+PapersList = connect(
+  (state) => ({}),
+  (dispatch) => ({
+    togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
+    togglePaperArchived: paperId => dispatch(togglePaperArchived(paperId)),
+  }),
+)(PapersList)
 
 export default PapersList;

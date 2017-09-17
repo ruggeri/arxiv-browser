@@ -26,10 +26,11 @@ class PaperItem extends React.PureComponent {
     return (
       <tr className={this.props.className} data-id={paper.get('id')}>
         <td>
-        <Link to={url} className={linkClass}>
-          {paper.get('title')}
-        </Link> <PaperStar paper={paper}/>
+          <Link to={url} className={linkClass}>
+            {paper.get('title')}
+          </Link>
         </td>
+        <td><PaperStar paper={paper}/></td>
         <td><PaperTrash paper={paper}/></td>
         <td>{authorsElement}</td>
       </tr>
