@@ -15,12 +15,11 @@ async function buildResponse(ctx, authors) {
   );
   const paperIds = ctx.body.authorships.map(as => as.paperId);
 
-  ctx.body.papers = await ctx.models.Paper.findAll(
-    {
-      where: {id: {$in: paperIds}},
-      order: [['publicationDateTime', 'DESC']]
-    }
-  );
+  ctx.body.papers = await ctx.models.Paper.findAll({
+    // select: ['id', 'link', 'title', 'publicationDateTime'],
+    where: {id: {$in: paperIds}},
+    order: [['publicationDateTime', 'DESC']],
+  });
 
   ctx.body.paperStatuses = await ctx.models.PaperStatus.findAll(
     {where: {id: {$in: paperIds}}}
@@ -30,7 +29,9 @@ async function buildResponse(ctx, authors) {
 const authorsRouter = new koaRouter();
 authorsRouter.get('/', async ctx => {
   // TODO: eventually I will want to paginate this...
-  const authors = await ctx.models.Author.findAll();
+  const authors = await ctx.models.Author.findAll({
+    limit: 100,
+  });
 
   await buildResponse(ctx, authors);
 });
