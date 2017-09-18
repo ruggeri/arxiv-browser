@@ -19,3 +19,33 @@
 .paper.starred {
   @extend .font-weight-bold;
 }
+
+.paper-item {
+  &:nth-child(odd) {
+    background-color: $gray-200;
+  }
+  &.active {
+    background-color: lighten(theme-color("primary"), 35%);
+  }
+
+  .title-row {
+    font-size: 13pt;
+
+    .paper {
+      color: black;
+    }
+
+    .buttons {
+      // Why can't I extend?
+      // @extend .pull-right;
+    }
+  }
+
+  .author-row {
+    font-size: 11pt;
+  }
+
+  .summary-row {
+    font-size: 12pt;
+  }
+}

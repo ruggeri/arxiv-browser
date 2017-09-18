@@ -1,6 +1,5 @@
 import { togglePaperStar } from 'actions/paper-status-actions';
 import { togglePaperArchived } from 'actions/paper-status-actions';
-import classNames from 'classnames';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Scroller from 'helpers/scroller';
@@ -64,25 +63,24 @@ class PapersList extends React.PureComponent {
     const { papers, showAuthors } = this.props;
 
     const paperItems = papers.map((paper, idx) => {
-      const trClassNames = classNames({
-        "table-active": idx == this.state.selectedIndex
-      });
+      const trClassNames = {
+        "active": idx == this.state.selectedIndex
+      };
+
       return (
         <PaperItem
           paper={paper}
           showAuthors={showAuthors}
           key={paper.get('id')}
-          className={trClassNames}
+          classNames={trClassNames}
         />
       );
     });
 
     return (
-      <table className="table table-striped">
-        <tbody ref={tbody => {this.tbody = tbody}}>
-          {paperItems}
-        </tbody>
-      </table>
+      <div ref={tbody => {this.tbody = tbody}}>
+        {paperItems}
+      </div>
     );
   }
 }
