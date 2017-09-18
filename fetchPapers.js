@@ -59,7 +59,7 @@ async function createAuthor(tx, authorJSON) {
     console.log(`Added author ${author.name} to the DB!`);
   }
 
-  return author;
+  return {author, didCreate};
 }
 
 async function createAuthors(tx, authorsJSON) {
@@ -69,11 +69,19 @@ async function createAuthors(tx, authorsJSON) {
   }
 
   const authors = [];
+  let numCreated = 0;
   for (authorJSON of authorsJSON) {
-    authors.push(await createAuthor(tx, authorJSON));
+    const {author, didCreate} = await createAuthor(tx, authorJSON);
+    authors.push(author);
+    if (didCreate) {
+      numCreated += 1;
+    }
   }
 
-  return authors;
+  return {
+    authors,
+    numCreated
+  }
 }
 
 async function createAuthorships(tx, paper, authors) {
@@ -110,7 +118,7 @@ async function createPaper(tx, paperJSON) {
     publicationDateTime: paperJSON["atom:published"]["#"],
   };
 
-  let [paper, didCreate] = [await models.Paper.findOne({
+  let [paper, didCreatePaper] = [await models.Paper.findOne({
     where: {link: paperAttrs.link},
     transaction: tx,
   }), false];
@@ -122,22 +130,90 @@ async function createPaper(tx, paperJSON) {
   await paper.save({transaction: tx});
   await createPaperStatus(tx, paper);
 
-  const authors = await createAuthors(tx, paperJSON["atom:author"]);
+  const {authors, numCreated: numAuthorsCreated} = await createAuthors(
+    tx, paperJSON["atom:author"]
+  );
   await createAuthorships(tx, paper, authors);
 
-  if (didCreate) {
+  if (didCreatePaper) {
     console.log(`Added paper ${paper.link} to the DB!`);
   }
+
+  return {
+    paper,
+    didCreatePaper,
+    authors,
+    numAuthorsCreated,
+  };
 }
 
-async function main(startIndex, maxResults) {
-  try {
-    await models.sequelize.transaction(async tx => {
-      const papersJSON = await fetchResults(startIndex, maxResults);
-      for (paperJSON of papersJSON) {
-        await createPaper(tx, paperJSON);
+async function pullDownPapers(startIndex, maxResults) {
+  let [numPapersCreated, numPapersFetched, numAuthorsCreated] = [0, 0, 0];
+  await models.sequelize.transaction(async tx => {
+    const papersJSON = await fetchResults(startIndex, maxResults);
+    numPapersFetched = papersJSON.length;
+
+    for (paperJSON of papersJSON) {
+      const result = await createPaper(tx, paperJSON);
+      if (result.didCreatePaper) {
+        numPapersCreated += 1;
       }
-    });
+      numAuthorsCreated += result.numAuthorsCreated;
+    }
+  });
+
+  return {
+    numPapersCreated,
+    numPapersFetched,
+    numAuthorsCreated,
+  };
+}
+
+async function delay(millis) {
+  await new Promise(resolve => setTimeout(resolve, millis));
+}
+
+async function main({startIndex, maxResults, maxQueries}) {
+  if (!maxQueries) {
+    maxQueries = Infinity;
+  }
+
+  try {
+    let numQueries = 0;
+    let skipLevel = 1;
+    while (true) {
+      console.log({
+        startIndex,
+        maxResults,
+        maxQueries,
+        numQueries,
+        skipLevel,
+      });
+
+      const result = await pullDownPapers(startIndex, maxResults);
+      console.log(result);
+      if (result.numPapersFetched == 0) {
+        console.log("Maybe rate limited?");
+      }
+
+      numQueries += 1;
+      if (numQueries >= maxQueries) {
+        break;
+      } else {
+        if (result.numPapersFetched > 0) {
+          if (result.numPapersCreated > 0) {
+            skipLevel = 1;
+          } else {
+            skipLevel += 1;
+          }
+
+          startIndex += (maxResults * skipLevel);
+          await delay(5000);
+        } else {
+          await delay(10000);
+        }
+      }
+    }
   } catch (err) {
     console.log(err);
   } finally {
@@ -145,6 +221,13 @@ async function main(startIndex, maxResults) {
   }
 }
 
+// Turn off logging?
+models.sequelize.options.logging = null;
+
 const START_INDEX = 0;
 const MAX_RESULTS = 100;
-main(START_INDEX, MAX_RESULTS);
+main({
+  startIndex: START_INDEX,
+  maxResults: MAX_RESULTS,
+  maxQueries: Infinity
+});
