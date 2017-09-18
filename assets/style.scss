@@ -6,6 +6,7 @@
 
 .inline-authors-list {
   @extend .list-inline;
+  margin-bottom: 0px;
 
   li {
     @extend .list-inline-item;
@@ -21,31 +22,45 @@
 }
 
 .paper-item {
-  &:nth-child(odd) {
-    background-color: $gray-200;
-  }
   &.active {
-    background-color: lighten(theme-color("primary"), 35%);
+    background-color: lighten(theme-color("primary"), 40%);
   }
 
-  .title-row {
-    font-size: 13pt;
-
-    .paper {
-      color: black;
-    }
-
-    .buttons {
-      // Why can't I extend?
-      // @extend .pull-right;
-    }
+  &.active .metadata-row {
+    background-color: lighten(theme-color("primary"), 30%);
   }
 
-  .author-row {
-    font-size: 11pt;
+  .metadata-row {
+    background-color: $gray-200;
+
+    .title-row {
+      font-size: 13pt;
+
+      .paper {
+        color: black;
+      }
+
+      .buttons {
+        // Why can't I extend?
+        // @extend .pull-right;
+      }
+    }
+
+    .author-row {
+      font-size: 11pt;
+    }
+
+    .publication-date-row {
+      font-size: 11pt;
+    }
   }
 
   .summary-row {
     font-size: 12pt;
+  }
+
+  hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 }
