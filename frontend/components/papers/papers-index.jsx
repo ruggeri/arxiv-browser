@@ -52,7 +52,12 @@ class SearchablePaginatedPapersList extends React.PureComponent {
   render() {
     const {searchPapers} = this.props;
     return (
-      <PersistableSearcher searcher={searchPapers} component={this.pager} kkey="searcher"/>
+      <PersistableSearcher
+        searcher={searchPapers}
+        component={this.pager}
+        kkey="searcher"
+        resultsLimit={20}
+      />
     );
   }
 }
