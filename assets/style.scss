@@ -1,4 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
+@import "./paper-item.scss";
 
 .author.starred {
   @extend .font-weight-bold;
@@ -19,52 +20,4 @@
 
 .paper.starred {
   @extend .font-weight-bold;
-}
-
-.paper-item {
-  $padding: 4px;
-
-  &.active {
-    background-color: lighten(theme-color("primary"), 40%);
-  }
-
-  &.active .metadata-row {
-    background-color: lighten(theme-color("primary"), 30%);
-  }
-
-  .metadata-row {
-    background-color: $gray-200;
-    padding: $padding;
-
-    .title-row {
-      font-size: 13pt;
-
-      .paper {
-        color: black;
-      }
-
-      .buttons {
-        // Why can't I extend?
-        // @extend .pull-right;
-      }
-    }
-
-    .author-row {
-      font-size: 11pt;
-    }
-
-    .publication-date-row {
-      font-size: 11pt;
-    }
-  }
-
-  .summary-row {
-    font-size: 12pt;
-    padding: $padding;
-  }
-
-  hr {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
 }

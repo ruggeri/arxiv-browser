@@ -10,17 +10,17 @@ import { Link } from 'react-router-dom';
 
 const PaperTitleRow = ({ isStarred, paper }) => (
   <div className="row title-row">
-    <div className="col-12">
+    <div className="col-11">
       <Link
         to={`/papers/${paper.get('id')}`}
         className={classNames({paper: true, starred: isStarred})}>
         {paper.get('title')}
       </Link>
+    </div>
 
-      <div className="buttons pull-right">
-        <PaperStar paper={paper}/>
-        <PaperTrash paper={paper}/>
-      </div>
+    <div className="buttons">
+      <PaperStar paper={paper}/>
+      <PaperTrash paper={paper}/>
     </div>
   </div>
 );

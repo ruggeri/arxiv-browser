@@ -1,0 +1,49 @@
+.paper-item {
+  $padding: 4px;
+
+  &.active {
+    background-color: lighten(theme-color("primary"), 40%);
+
+    .metadata-row {
+      background-color: lighten(theme-color("primary"), 30%);
+    }
+  }
+
+  .metadata-row {
+    background-color: $gray-200;
+    padding: $padding;
+
+    .title-row {
+      font-size: 13pt;
+
+      .paper {
+        color: black;
+      }
+
+      .buttons {
+        margin-left: auto;
+        padding-right: 15px;
+        // Why can't I extend?
+        // @extend .pull-right;
+      }
+    }
+
+    .author-row {
+      font-size: 11pt;
+    }
+
+    .publication-date-row {
+      font-size: 11pt;
+    }
+  }
+
+  .summary-row {
+    font-size: 12pt;
+    padding: $padding;
+  }
+
+  hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
