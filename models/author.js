@@ -1,26 +1,10 @@
-module.exports = (sequelize, DataTypes) => {
-  const Author = sequelize.define("Author", {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    name: {
-      type: DataTypes.STRING,
-      notEmpty: true,
-      notNull: true,
-    },
-  }, {
-    tableName: "authors",
-  });
-
-  Object.assign(Author, {
-    queryByName: async (query) => (
-      await Author.findAll({
-        where: {name: {$iLike: `%${query}%`}},
-      })
-    )
-  })
-
-  return Author;
+module.exports = (knex) => {
+  return {
+    findAll: async (authorIds) => {
+      return await knex
+        .select('authors.*')
+        .from('authors')
+        .whereIn(`authors.id`, authorIds)
+    }
+  };
 }
