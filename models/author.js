@@ -14,5 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     tableName: "authors",
   });
 
+  Object.assign(Author, {
+    queryByName: async (query) => (
+      await Author.findAll({
+        where: {name: {$iLike: `%${query}%`}},
+      })
+    )
+  })
+
   return Author;
 }

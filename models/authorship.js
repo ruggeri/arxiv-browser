@@ -17,5 +17,13 @@ module.exports = (sequelize, DataTypes) => {
     tableName: "authorships",
   });
 
+  Object.assign(Authorship, {
+    forAuthors: async (authors) => (
+      await Authorship.findAll({
+        where: {authorId: {$in: authors.map(a => a.id)}}
+      })
+    ),
+  });
+
   return Authorship;
 }
