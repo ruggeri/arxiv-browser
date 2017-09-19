@@ -14,8 +14,8 @@ module.exports = async function createPaperStatus(tx, paper) {
       tx
         .insert({
           paperId: paper.id,
-          isArchived: false,
           isStarred: false,
+          state: 'isAwaitingReview',
           createdAt: models.knex.fn.now(),
         })
         .into('paperStatuses')
