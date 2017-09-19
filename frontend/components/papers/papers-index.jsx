@@ -3,13 +3,13 @@ import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx'
 import { ScrollRestorer } from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
 import { PersistableSearcher } from 'helpers/searcher.jsx';
-import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred, searchPapers } from 'queries/paper';
+import { getAllPapers, hasStarredAuthor, isPaperIgnored, isPaperStarred, searchPapers } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
 const FILTERS = {
   default: (state, papers) => {
-    return papers.filter(paper => !isPaperArchived(state, {paper}));
+    return papers.filter(paper => !isPaperIgnored(state, {paper}));
   },
 
   starred: (state, papers) => {
@@ -18,7 +18,7 @@ const FILTERS = {
 
   starredAuthors: (state, papers) => {
     return papers.filter(paper => (
-      hasStarredAuthor(state, {paper}) && !isPaperArchived(state, {paper})
+      hasStarredAuthor(state, {paper}) && !isPaperIgnored(state, {paper})
     ));
   }
 }

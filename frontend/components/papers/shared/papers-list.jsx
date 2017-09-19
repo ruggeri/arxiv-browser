@@ -1,5 +1,5 @@
 import { togglePaperStar } from 'actions/paper-status-actions';
-import { togglePaperArchived } from 'actions/paper-status-actions';
+import { setState } from 'actions/paper-status-actions';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Scroller from 'helpers/scroller';
@@ -30,7 +30,7 @@ class PapersList extends React.PureComponent {
       this.props.togglePaperStar(this.selectedPaper().get('id'));
     });
     mousetrap.bind('e', () => {
-      this.props.togglePaperArchived(this.selectedPaper().get('id'));
+      this.props.setIgnored(this.selectedPaper().get('id'));
     });
     mousetrap.bind('O', () => {
       const link = this.selectedPaper().get('link');
@@ -93,7 +93,7 @@ function connect(component) {
     (state) => ({}),
     (dispatch) => ({
       togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
-      togglePaperArchived: paperId => dispatch(togglePaperArchived(paperId)),
+      setIgnored: paperId => dispatch(setState(paperId, 'isIgnored')),
     }),
   )(component)
   return component;

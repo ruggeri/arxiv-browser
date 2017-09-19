@@ -28,11 +28,11 @@ export const hasStarredAuthor = (state, paperOrId) => {
   return authors.some(a => isAuthorStarred(state, {author: a}));
 }
 
-export const isPaperArchived = (state, paperOrId) => {
+export const isPaperIgnored = (state, paperOrId) => {
   const paperId = _paperId(paperOrId);
 
   const paperStatus = state.paperStatuses.get(paperId);
-  return paperStatus && paperStatus.get('isArchived');
+  return paperStatus && paperStatus.get('state') == 'isIgnored';
 }
 
 export const isPaperStarred = (state, paperOrId) => {

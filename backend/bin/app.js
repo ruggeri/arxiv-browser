@@ -1,4 +1,5 @@
 const koa = require('koa');
+const koaBodyParser = require('koa-bodyparser');
 const koaMount = require('koa-mount');
 const koaStatic = require('koa-static');
 const koaViews = require('koa-views');
@@ -10,6 +11,7 @@ app.context.models = require(__dirname + '/../models');
 // Pre-routes middleware!
 app.use(koaViews(__dirname + '/../views'));
 app.use(koaMount('/static', koaStatic(__dirname + '/../../static')));
+app.use(koaBodyParser());
 app.use(rootRouter.routes());
 
 // Listen!

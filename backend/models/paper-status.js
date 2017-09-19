@@ -7,14 +7,12 @@ module.exports = (knex) => {
         .whereIn(`paperStatuses.paperId`, paperIds)
     },
 
-    toggleArchived: async (id) => {
+    setState: async (id, state) => {
       return (await (
         knex('paperStatuses')
           .returning('*')
           .where('paperStatuses.paperId', id)
-          .update({
-            isArchived: knex.raw('NOT "isArchived"')
-          })
+          .update({state: state})
       ))[0];
     },
 

@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export const RECEIVE_PAPER_STATUSES = 'RECEIVE_PAPER_STATUSES';
 
 export const togglePaperStar = (paperId) => async (dispatch) => {
@@ -10,13 +12,15 @@ export const togglePaperStar = (paperId) => async (dispatch) => {
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 
-export const togglePaperArchived = (paperId) => async (dispatch) => {
-  const request = new Request(
-    `/api/papers/${paperId}/paperStatus/toggleArchived`, {
-    method: "POST",
+export const setState = (paperId, state) => async (dispatch) => {
+  const response = await $.ajax({
+    url: `/api/papers/${paperId}/paperStatus/state`,
+    method: 'POST',
+    data: {
+      state: state,
+    }
   });
 
-  const response = await (await fetch(request)).json();
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 
