@@ -27,9 +27,9 @@ async function buildResponse(ctx, authors) {
 const authorsRouter = new koaRouter();
 authorsRouter.get('/', async ctx => {
   // TODO: eventually I will want to paginate this...
-  const authors = await ctx.models.Author.findAll({
-    limit: 100,
-  });
+  // TODO: Dirty hack for now...
+  ctx.query.isAuthorStarred = ctx.query.isAuthorStarred == "true";
+  const authors = await ctx.models.Author.query(ctx.query);
 
   await buildResponse(ctx, authors);
 });

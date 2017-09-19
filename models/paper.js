@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-DEFAULT_PAPERS_LIMIT = 100;
+const DEFAULT_PAPERS_LIMIT = 100;
 
 function chainIsPaperStarred(paperQuery) {
   return (

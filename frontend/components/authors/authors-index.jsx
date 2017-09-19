@@ -1,4 +1,4 @@
-import { fetchAllAuthors } from 'actions/author-actions';
+import { fetchAuthorQueryResults } from 'actions/author-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
@@ -43,19 +43,13 @@ class SearchablePaginatedAuthorsList extends React.PureComponent {
   }
 
   render() {
-    const {authors} = this.props;
-
-    const searchAuthors = query => {
-      query = query.toLowerCase();
-      return authors.filter(author => (
-        author.get('name').toLowerCase().includes(query)
-      ));
-    }
+    const {authors, executeQuery, searchAuthors} = this.props;
 
     return (
       <PersistableSearcher
         searcher={searchAuthors}
         component={this.pager}
+        executeQuery={executeQuery}
         kkey="searcher"
         resultsLimit={20}
       />
@@ -64,10 +58,6 @@ class SearchablePaginatedAuthorsList extends React.PureComponent {
 }
 
 class AuthorsIndex extends React.PureComponent {
-  componentDidMount() {
-    this.props.fetchAllAuthors();
-  }
-
   render() {
     const { authors } = this.props;
 
@@ -75,7 +65,7 @@ class AuthorsIndex extends React.PureComponent {
       <div>
         <ComponentStateStore.ScrollRestorer/>
         <h1>There are {authors.count()} authors in the archive!</h1>
-        <SearchablePaginatedAuthorsList authors={authors}/>
+        <SearchablePaginatedAuthorsList {...this.props}/>
       </div>
     );
   }
@@ -86,12 +76,28 @@ export default connect(
     const authors = filterAuthors(
       state, getAllAuthors(state), ownProps.filterName
     );
+    const searchAuthors = query => {
+      query = query.toLowerCase();
+      return authors.filter(author => (
+        author.get('name').toLowerCase().includes(query)
+      ));
+    }
 
     return {
       authors,
+      searchAuthors
     };
   },
-  (dispatch) => ({
-    fetchAllAuthors: () => dispatch(fetchAllAuthors()),
-  }),
+  (dispatch, ownProps) => {
+    const executeQuery = (query) => (
+      fetchAuthorQueryResults({
+        query: query,
+        isAuthorStarred: ownProps.filterName == 'starred',
+      })
+    );
+
+    return {
+      executeQuery: query => dispatch(executeQuery(query)),
+    };
+  },
 )(AuthorsIndex);
