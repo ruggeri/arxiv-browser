@@ -1,5 +1,5 @@
 var env       = process.env.NODE_ENV || 'development';
-var config    = require(__dirname + '/../config/sequelize.json')[env];
+var config    = require(__dirname + '/../config/knexfile')[env];
 
 const knex = require('knex')(config);
 
