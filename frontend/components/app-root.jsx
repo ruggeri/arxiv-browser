@@ -4,10 +4,10 @@ import PaperShow from 'components/papers/paper-show.jsx';
 import AuthorShow from 'components/authors/author-show.jsx';
 import AuthorsIndex from 'components/authors/authors-index.jsx';
 import { ComponentStateProvider } from 'helpers/component-state-store';
+import Navigator from 'helpers/navigator.jsx';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-
 
 const Routes = () => (
   <Switch>
@@ -35,8 +35,9 @@ const AppRoot = ({ store }) => (
     <BrowserRouter>
       <ComponentStateProvider>
         <div className="container">
+          <Navigator/>
           <Header/>
-          <Routes />
+          <Routes/>
         </div>
       </ComponentStateProvider>
     </BrowserRouter>
