@@ -28,8 +28,8 @@ async function createAuthorship(tx, paper, author) {
 module.exports = async function createAuthorships(tx, paper, authors) {
   const authorships = [];
   let numCreated = 0;
-  for (let author of authorships) {
-    const [authorship, didCreate] = await (
+  for (const author of authors) {
+    const {authorship, didCreate} = await (
       createAuthorship(tx, paper, author)
     );
 

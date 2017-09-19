@@ -36,7 +36,7 @@ module.exports = async function createAuthors(tx, authorsJSON) {
 
   const authors = [];
   let numCreated = 0;
-  for (let authorJSON of authorsJSON) {
+  for (const authorJSON of authorsJSON) {
     const {author, didCreate} = await createAuthor(tx, authorJSON);
     authors.push(author);
     if (didCreate) {

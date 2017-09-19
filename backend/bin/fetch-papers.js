@@ -1,6 +1,6 @@
-const createPaper = require('./fetch-papers/create-paper');
-const requestPaperResults = require('./fetch-papers/request-paper-results');
-const models = require('./models');
+const createPaper = require(__dirname + '/../fetch-papers/create-paper');
+const requestPaperResults = require(__dirname + '/../fetch-papers/request-paper-results');
+const models = require(__dirname + '/../models');
 
 async function pullDownPapers(startIndex, maxResults) {
   let [numPapersCreated, numPapersFetched, numAuthorsCreated] = [0, 0, 0];
