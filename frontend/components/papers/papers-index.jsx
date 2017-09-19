@@ -66,10 +66,6 @@ class SearchablePaginatedPapersList extends React.PureComponent {
 }
 
 class PapersIndex extends React.PureComponent {
-  componentDidMount() {
-    this.props.executeQuery('');
-  }
-
   render() {
     const { papers } = this.props;
 

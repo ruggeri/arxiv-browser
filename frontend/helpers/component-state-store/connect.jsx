@@ -22,14 +22,12 @@ export function connect(component) {
     throw "You cannot connect to a functional component!";
   }
   class ExtendedComponent extends component {
-    componentWillMount() {
-      if (super.componentWillMount) {
-        super.componentWillMount();
-      }
+    constructor(props) {
+      super(props);
 
       const persistedState = this.props.getPersistedState();
       if (persistedState) {
-        super.setState(persistedState);
+        this.state = persistedState;
       }
     }
 

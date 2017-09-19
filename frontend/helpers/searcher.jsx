@@ -17,6 +17,13 @@ class Searcher extends React.Component {
     this.setQueryState();
   }
 
+  componentWillMount() {
+    // Feels a little dirty to do this here...
+    if (this.props.executeQuery) {
+      this.props.executeQuery(this.state.query);
+    }
+  }
+
   setQueryState() {
     this.setState({query: this.state.inputValue}, () => {
       const { executeQuery, minQueryLength } = this.props;
