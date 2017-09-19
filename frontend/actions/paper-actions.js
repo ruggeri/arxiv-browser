@@ -1,9 +1,9 @@
+import { receiveAuthors } from 'actions/author-actions';
+import { receiveAuthorships } from 'actions/authorship-actions';
+import { receiveAuthorStatuses } from 'actions/author-status-actions';
+import { receivePaperStatuses } from 'actions/paper-status-actions';
+import queryString from 'query-string';
 import { batchActions } from 'redux-batched-actions';
-
-import { receiveAuthors } from './author-actions';
-import { receiveAuthorships } from './authorship-actions';
-import { receiveAuthorStatuses } from './author-status-actions';
-import { receivePaperStatuses } from './paper-status-actions';
 
 export const RECEIVE_PAPERS = 'RECEIVE_PAPERS';
 
@@ -28,9 +28,8 @@ export const fetchPaper = (paperId) => async (dispatch) => {
 }
 
 export const fetchPaperQueryResults = (query) => async (dispatch) => {
-  console.log("I fetch for you!")
-  query = encodeURIComponent(query);
-  const response = await (await fetch(`/api/papers?query=${query}`)).json();
+  const qs = queryString.stringify(query);
+  const response = await (await fetch(`/api/papers?${qs}`)).json();
   receivePapersResponse(dispatch, response);
 }
 

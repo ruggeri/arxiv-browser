@@ -50,11 +50,12 @@ class SearchablePaginatedPapersList extends React.PureComponent {
   }
 
   render() {
-    const {fetchPaperQueryResults, searchPapers} = this.props;
+    const {executeQuery, searchPapers} = this.props;
+
     return (
       <PersistableSearcher
         component={this.pager}
-        executeQuery={fetchPaperQueryResults}
+        executeQuery={executeQuery}
         kkey="searcher"
         minQueryLength={3}
         resultsLimit={20}
@@ -66,7 +67,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
 
 class PapersIndex extends React.PureComponent {
   componentDidMount() {
-    this.props.fetchLatestPapers();
+    this.props.executeQuery('');
   }
 
   render() {
@@ -93,8 +94,17 @@ export default connect(
       searchPapers: query => searchPapers(state, query, papers),
     };
   },
-  (dispatch) => ({
-    fetchLatestPapers: () => dispatch(fetchLatestPapers()),
-    fetchPaperQueryResults: query => dispatch(fetchPaperQueryResults(query)),
-  }),
+  (dispatch, ownProps) => {
+    const executeQuery = (query) => (
+      fetchPaperQueryResults({
+        query: query,
+        isPaperStarred: ownProps.filterName == 'starred',
+        isAuthorStarred: ownProps.filterName == 'starredAuthors',
+      })
+    )
+
+    return {
+      executeQuery: query => dispatch(executeQuery(query)),
+    };
+  },
 )(PapersIndex);
