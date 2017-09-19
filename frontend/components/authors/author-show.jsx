@@ -1,6 +1,7 @@
 import { fetchAuthor } from 'actions/author-actions';
-import { PapersList } from 'components/papers/shared/papers-list.jsx';
+import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx';
 import AuthorStar from 'components/authors/shared/author-star.jsx';
+import { ScrollRestorer } from 'helpers/component-state-store';
 import { getAuthorById } from 'queries/author';
 import { papersForAuthor } from 'queries/paper';
 import React from 'react';
@@ -23,11 +24,16 @@ class AuthorShow extends React.PureComponent {
 
     return (
       <div>
+        <ScrollRestorer/>
         <h1>
           {author.get('name')}
           <AuthorStar author={author}/>
         </h1>
-        <PapersList papers={authoredPapers}/>
+        <PersistablePapersList
+          papers={authoredPapers}
+          showAuthors={true}
+          kkey="authored-papers"
+        />
       </div>
     );
   }

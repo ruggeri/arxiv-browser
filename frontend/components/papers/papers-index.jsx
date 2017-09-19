@@ -1,6 +1,6 @@
 import { fetchLatestPapers, fetchPaperQueryResults } from 'actions/paper-actions';
 import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx';
-import ComponentStateStore from 'helpers/component-state-store';
+import { ScrollRestorer } from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
 import { PersistableSearcher } from 'helpers/searcher.jsx';
 import { getAllPapers, hasStarredAuthor, isPaperArchived, isPaperStarred, searchPapers } from 'queries/paper';
@@ -71,7 +71,7 @@ class PapersIndex extends React.PureComponent {
 
     return (
       <div>
-        <ComponentStateStore.ScrollRestorer/>
+        <ScrollRestorer/>
         <h1>There are {papers.count()} papers in the archive!</h1>
         <SearchablePaginatedPapersList {...this.props}/>
       </div>

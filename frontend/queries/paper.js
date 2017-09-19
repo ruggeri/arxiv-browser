@@ -51,7 +51,7 @@ export const papersForAuthor = (state, authorOrId) => {
     as => state.papers.get(as.get('paperId'))
   ).filter(p => !!p).sortBy(p => p.get('publicationDateTime')).reverse();
 
-  return papers
+  return papers.toList();
 };
 
 export const searchPapers = (state, query, papers, {limitResults} = {}) => {
