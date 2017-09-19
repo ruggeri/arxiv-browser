@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import PaperTrash from 'components/papers/shared/paper-trash.jsx';
+import _ from 'lodash';
 import { authorsForPaper } from 'queries/author';
 import { getPaperById, isPaperStarred } from 'queries/paper';
 import React from 'react';
@@ -58,6 +59,13 @@ const PaperSummary = ({ paper }) => (
 );
 
 class PaperItem extends React.PureComponent {
+  shouldComponentUpdate(newProps, newState) {
+    return (
+      !_.isEqual(this.props, newProps) ||
+      !_.isEqual(this.state, newState)
+    );
+  }
+
   render() {
     const { authors, isStarred, paper } = this.props;
 
