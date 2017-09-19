@@ -18,7 +18,18 @@ class Searcher extends React.Component {
   }
 
   setQueryState() {
-    this.setState({query: this.state.inputValue});
+    this.setState({query: this.state.inputValue}, () => {
+      const { executeQuery, minQueryLength } = this.props;
+      const { query } = this.state;
+
+      if (!executeQuery) {
+        return;
+      } else if (minQueryLength && query.length < minQueryLength) {
+        return;
+      }
+
+      this.props.executeQuery(query);
+    });
   }
 
   matchedItems() {
