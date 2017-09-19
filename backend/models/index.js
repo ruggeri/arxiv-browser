@@ -4,6 +4,7 @@ var config    = require(__dirname + '/../../config/knexfile')[env];
 const knex = require('knex')(config);
 
 module.exports = {
+  knex: knex,
   Author: require('./author.js')(knex),
   Authorship: require('./authorship.js')(knex),
   AuthorStatus: require('./author-status.js')(knex),

@@ -2,7 +2,7 @@ const models = require('./models');
 
 async function pullDownPapers(startIndex, maxResults) {
   let [numPapersCreated, numPapersFetched, numAuthorsCreated] = [0, 0, 0];
-  await models.sequelize.transaction(async tx => {
+  await models.knex.transaction(async tx => {
     const papersJSON = await fetchResults(startIndex, maxResults);
     numPapersFetched = papersJSON.length;
 
@@ -75,7 +75,7 @@ async function main({startIndex, maxResults, maxQueries}) {
 }
 
 // Turn off logging?
-models.sequelize.options.logging = null;
+models.knex.options.logging = null;
 
 const START_INDEX = 0;
 const MAX_RESULTS = 100;

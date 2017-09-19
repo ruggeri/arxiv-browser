@@ -7,26 +7,29 @@ async function createPaper(tx, paperJSON) {
     publicationDateTime: paperJSON["atom:published"]["#"],
   };
 
-  let [paper, didCreatePaper] = [await models.Paper.findOne({
-    where: {link: paperAttrs.link},
-    transaction: tx,
-  }), false];
+  let [paper, didCreatePaper] = [(await (
+    tx
+      .select('papers.*')
+      .from('papers')
+      .first()
+  )), false];
+
   if (!paper) {
-    // Else we need to build a new paper!
-    [paper, didCreate] = [new models.Paper(), true];
+    [paper, didCreatePaper] = [(await (
+      tx
+        .insert(paperAttrs)
+        .into('papers')
+        .returning('papers.*')
+        .first()
+    )), true];
   }
-  paper.set(paperAttrs);
-  await paper.save({transaction: tx});
+
   await createPaperStatus(tx, paper);
 
   const {authors, numCreated: numAuthorsCreated} = await createAuthors(
     tx, paperJSON["atom:author"]
   );
   await createAuthorships(tx, paper, authors);
-
-  if (didCreatePaper) {
-    console.log(`Added paper ${paper.link} to the DB!`);
-  }
 
   return {
     paper,

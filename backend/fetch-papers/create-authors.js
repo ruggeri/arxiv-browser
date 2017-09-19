@@ -1,26 +1,27 @@
-const models = require('./models');
-
 async function createAuthor(tx, authorJSON) {
   const authorAttrs = {
     name: authorJSON["name"]["#"]
   }
 
-  let [author, didCreate] = [await models.Author.findOne({
-    where: {name: authorAttrs.name},
-    transaction: tx
-  }), false];
-  if (!author) {
-    [author, didCreate] = [new models.Author(), true];
-  }
+  let [author, didCreate] = [(await (
+    tx
+      .select('authors.*')
+      .from('authors')
+      .where({name: authorAttrs.name})
+      .first()
+  )), false];
 
-  author.set(authorAttrs);
-  await author.save({transaction: tx});
+  if (!author) {
+    [author, didCreate] = [(await (
+      tx
+        .insert(authorAttrs)
+        .into('authors')
+        .returning('authors.*')
+        .first()
+    )), true];
+  }
 
   await createAuthorStatus(tx, author);
-
-  if (didCreate) {
-    console.log(`Added author ${author.name} to the DB!`);
-  }
 
   return {author, didCreate};
 }
@@ -33,7 +34,7 @@ module.exports = async function createAuthors(tx, authorsJSON) {
 
   const authors = [];
   let numCreated = 0;
-  for (authorJSON of authorsJSON) {
+  for (let authorJSON of authorsJSON) {
     const {author, didCreate} = await createAuthor(tx, authorJSON);
     authors.push(author);
     if (didCreate) {
@@ -43,6 +44,6 @@ module.exports = async function createAuthors(tx, authorsJSON) {
 
   return {
     authors,
-    numCreated
+    numCreated,
   }
-}
+};
