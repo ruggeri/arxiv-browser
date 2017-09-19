@@ -45,7 +45,7 @@ module.exports = (knex) => {
       const mergedResults = (
         _(resultsByTitle)
         .unionBy(resultsByAuthorName, 'id')
-        .orderBy(['publicationDateTime', 'DESC'])
+        .orderBy('publicationDateTime', 'desc')
         .take(limit)
         .value()
       )

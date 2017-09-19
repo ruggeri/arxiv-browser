@@ -49,7 +49,7 @@ export const papersForAuthor = (state, authorOrId) => {
   const authorships = authorshipsByAuthorId.get(authorId, I.Set());
   const papers = authorships.map(
     as => state.papers.get(as.get('paperId'))
-  ).filter(p => !!p).sortBy(p => p.get('publicationDateTime'));
+  ).filter(p => !!p).sortBy(p => p.get('publicationDateTime')).reverse();
 
   return papers
 };
@@ -66,7 +66,7 @@ export const searchPapers = (state, query, papers, {limitResults} = {}) => {
     return authors.some(author => (
       author.get('name').toLowerCase().includes(query)
     ));
-  }).sortBy(paper => -paper.get('publicationDateTime'));
+  }).sortBy(paper => paper.get('publicationDateTime')).reverse();
 
   if (limitResults) {
     matchedItems = matchedItems.take(limitResults);
