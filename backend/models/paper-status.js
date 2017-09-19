@@ -4,7 +4,7 @@ const STATE_ENUM_VALUES = [
   'isAwaitingReview',
   'isIgnored',
   'isSavedForLaterReading',
-  'isRead',
+  'isReviewed',
 ];
 
 module.exports = (knex) => {

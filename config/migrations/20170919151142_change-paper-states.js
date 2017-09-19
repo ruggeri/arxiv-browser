@@ -5,7 +5,7 @@ exports.up = async function(knex, Promise) {
       'isAwaitingReview',
       'isIgnored',
       'isSavedForLaterReading',
-      'isRead',
+      'isReviewed',
     ]).notNullable();
   });
 };
