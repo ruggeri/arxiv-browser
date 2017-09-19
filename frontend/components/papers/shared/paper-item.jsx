@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
+import PaperSave from 'components/papers/shared/paper-save.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import PaperTrash from 'components/papers/shared/paper-trash.jsx';
 import _ from 'lodash';
@@ -22,6 +23,7 @@ const PaperTitleRow = ({ isStarred, paper }) => (
     <div className="buttons">
       <PaperStar paper={paper}/>
       <PaperTrash paper={paper}/>
+      <PaperSave paper={paper}/>
     </div>
   </div>
 );

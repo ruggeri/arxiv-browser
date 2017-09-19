@@ -10,6 +10,19 @@ exports.up = async function(knex, Promise) {
   });
 };
 
-exports.down = function(knex, Promise) {
-  throw "No going back!";
+exports.down = async function(knex, Promise) {
+  await knex.schema.alterTable('paperStatuses', table => {
+    table.dropColumn('state');
+    table.boolean('isArchived');
+  });
+
+  await (
+    knex
+      .update({isArchived: false})
+      .into('paperStatuses')
+  );
+
+  await knex.schema.alterTable('paperStatuses', table => {
+    table.boolean('isArchived').notNullable().alter();
+  })
 };
