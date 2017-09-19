@@ -1,4 +1,4 @@
-import { fetchAllPapers } from 'actions/paper-actions';
+import { fetchLatestPapers, fetchPaperQueryResults } from 'actions/paper-actions';
 import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
@@ -50,13 +50,15 @@ class SearchablePaginatedPapersList extends React.PureComponent {
   }
 
   render() {
-    const {searchPapers} = this.props;
+    const {fetchPaperQueryResults, searchPapers} = this.props;
     return (
       <PersistableSearcher
-        searcher={searchPapers}
         component={this.pager}
+        executeQuery={fetchPaperQueryResults}
         kkey="searcher"
+        minQueryLength={3}
         resultsLimit={20}
+        searcher={searchPapers}
       />
     );
   }
@@ -64,7 +66,7 @@ class SearchablePaginatedPapersList extends React.PureComponent {
 
 class PapersIndex extends React.PureComponent {
   componentDidMount() {
-    this.props.fetchAllPapers();
+    this.props.fetchLatestPapers();
   }
 
   render() {
@@ -92,6 +94,7 @@ export default connect(
     };
   },
   (dispatch) => ({
-    fetchAllPapers: () => dispatch(fetchAllPapers()),
+    fetchLatestPapers: () => dispatch(fetchLatestPapers()),
+    fetchPaperQueryResults: query => dispatch(fetchPaperQueryResults(query)),
   }),
 )(PapersIndex);
