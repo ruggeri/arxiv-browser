@@ -1,3 +1,5 @@
+const models = require('../models');
+
 module.exports = async function createPaperStatus(tx, paper) {
   let [paperStatus, didCreate] = [(await (
     tx
@@ -10,11 +12,15 @@ module.exports = async function createPaperStatus(tx, paper) {
   if (!paperStatus) {
     [paperStatus, didCreate] = [(await (
       tx
-        .insert({paperId: paper.id, isArchived: false isStarred: false})
+        .insert({
+          paperId: paper.id,
+          isArchived: false,
+          isStarred: false,
+          createdAt: models.knex.fn.now(),
+        })
         .into('paperStatuses')
-        .returning('paperStatuses.*')
-        .first()
-    )), true];
+        .returning('*')
+    ))[0], true];
   }
 
   return {paperStatus, didCreate};

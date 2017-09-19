@@ -1,3 +1,5 @@
+const models = require('../models');
+
 module.exports = async function createAuthorStatus(tx, author) {
   let [authorStatus, didCreate] = [(await (
     tx
@@ -10,11 +12,14 @@ module.exports = async function createAuthorStatus(tx, author) {
   if (!authorStatus) {
     [authorStatus, didCreate] = [(await (
       tx
-        .insert({authorId: author.id, isStarred: false})
+        .insert({
+          authorId: author.id,
+          isStarred: false,
+          createdAt: models.knex.fn.now(),
+        })
         .into('authorStatuses')
-        .returning('authorStatuses.*')
-        .first()
-    )), true];
+        .returning('*')
+    ))[0], true];
   }
 
   return {authorStatus, didCreate};

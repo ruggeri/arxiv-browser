@@ -1,9 +1,11 @@
+const createPaper = require('./fetch-papers/create-paper');
+const requestPaperResults = require('./fetch-papers/request-paper-results');
 const models = require('./models');
 
 async function pullDownPapers(startIndex, maxResults) {
   let [numPapersCreated, numPapersFetched, numAuthorsCreated] = [0, 0, 0];
   await models.knex.transaction(async tx => {
-    const papersJSON = await fetchResults(startIndex, maxResults);
+    const papersJSON = await requestPaperResults(startIndex, maxResults);
     numPapersFetched = papersJSON.length;
 
     for (paperJSON of papersJSON) {
@@ -70,12 +72,9 @@ async function main({startIndex, maxResults, maxQueries}) {
   } catch (err) {
     console.log(err);
   } finally {
-    models.sequelize.close();
+    models.knex.destroy();
   }
 }
-
-// Turn off logging?
-models.knex.options.logging = null;
 
 const START_INDEX = 0;
 const MAX_RESULTS = 100;

@@ -1,3 +1,5 @@
+const models = require('../models');
+
 async function createAuthorship(tx, paper, author) {
   let [authorship, didCreate] = [(await (
     tx
@@ -10,11 +12,14 @@ async function createAuthorship(tx, paper, author) {
   if (!authorship) {
     [authorship, didCreate] = [(await (
       tx
-        .insert({paperId: paper.id, authorId: author.id})
+        .insert({
+          paperId: paper.id,
+          authorId: author.id,
+          createdAt: models.knex.fn.now(),
+        })
         .into('authorships')
-        .returning('authorships.*')
-        .first()
-    )), true];
+        .returning('*')
+    ))[0], true];
   }
 
   return {authorship, didCreate};

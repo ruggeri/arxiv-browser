@@ -1,4 +1,9 @@
-async function createPaper(tx, paperJSON) {
+const models = require('../models');
+const createAuthors = require('./create-authors');
+const createAuthorships = require('./create-authorships');
+const createPaperStatus = require('./create-paper-status');
+
+module.exports = async function createPaper(tx, paperJSON) {
   const paperAttrs = {
     link: paperJSON.link,
     title: paperJSON.title,
@@ -11,17 +16,17 @@ async function createPaper(tx, paperJSON) {
     tx
       .select('papers.*')
       .from('papers')
+      .where({link: paperAttrs.link})
       .first()
   )), false];
 
   if (!paper) {
     [paper, didCreatePaper] = [(await (
       tx
-        .insert(paperAttrs)
+        .insert({...paperAttrs, createdAt: models.knex.fn.now()})
         .into('papers')
-        .returning('papers.*')
-        .first()
-    )), true];
+        .returning('*')
+    ))[0], true];
   }
 
   await createPaperStatus(tx, paper);

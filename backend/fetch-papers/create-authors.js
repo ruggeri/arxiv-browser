@@ -1,3 +1,6 @@
+const models = require('../models');
+const createAuthorStatus = require('./create-author-status');
+
 async function createAuthor(tx, authorJSON) {
   const authorAttrs = {
     name: authorJSON["name"]["#"]
@@ -14,11 +17,10 @@ async function createAuthor(tx, authorJSON) {
   if (!author) {
     [author, didCreate] = [(await (
       tx
-        .insert(authorAttrs)
+        .insert({...authorAttrs, createdAt: models.knex.fn.now()})
         .into('authors')
-        .returning('authors.*')
-        .first()
-    )), true];
+        .returning('*')
+    ))[0], true];
   }
 
   await createAuthorStatus(tx, author);
