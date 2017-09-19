@@ -31,6 +31,17 @@ module.exports = (knex) => {
       )
     },
 
+    findForAuthorIds: async (authorIds) => {
+      return await (
+        knex
+          .select('papers.*')
+          .from('papers')
+          .join('authorships', 'papers.id', 'authorships.paperId')
+          .join('authors', 'authorships.authorId', 'authors.id')
+          .whereIn('authors.id', authorIds)
+      );
+    },
+
     query: async (options) => {
       const {query, limit, isPaperStarred, isAuthorStarred} = Object.assign({
         limit: DEFAULT_PAPERS_LIMIT,
