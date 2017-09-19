@@ -66,7 +66,7 @@ export const searchPapers = (state, query, papers, {limitResults} = {}) => {
     return authors.some(author => (
       author.get('name').toLowerCase().includes(query)
     ));
-  });
+  }).sortBy(paper => -paper.get('publicationDateTime'));
 
   if (limitResults) {
     matchedItems = matchedItems.take(limitResults);
