@@ -21,7 +21,7 @@ function chainIsAuthorStarred(paperQuery) {
 
 module.exports = (knex) => {
   const Paper = {
-    findAll: async (paperIds) => {
+    findByIds: async (paperIds) => {
       return await (
         knex
           .select('papers.*')

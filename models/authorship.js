@@ -1,6 +1,6 @@
 module.exports = (knex) => {
   return {
-    findAll: async (columnName, ids) => {
+    findByIds: async (columnName, ids) => {
       return await knex
         .select('authorships.*')
         .from('authorships')

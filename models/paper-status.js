@@ -1,6 +1,6 @@
 module.exports = (knex) => {
   return {
-    findAll: async (paperIds) => {
+    findByIds: async (paperIds) => {
       return await knex
         .select('paperStatuses.*')
         .from('paperStatuses')

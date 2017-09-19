@@ -6,18 +6,18 @@ async function buildResponse(ctx, papers) {
   ctx.body.papers = papers;
   const paperIds = papers.map(p => p.id);
 
-  ctx.body.paperStatuses = await ctx.models.PaperStatus.findAll(
+  ctx.body.paperStatuses = await ctx.models.PaperStatus.findByIds(
     paperIds
   );
 
-  ctx.body.authorships = await ctx.models.Authorship.findAll(
+  ctx.body.authorships = await ctx.models.Authorship.findByIds(
     'paperId', paperIds
   );
   const authorIds = ctx.body.authorships.map(as => as.authorId);
 
-  ctx.body.authors = await ctx.models.Author.findAll(authorIds);
+  ctx.body.authors = await ctx.models.Author.findByIds(authorIds);
 
-  ctx.body.authorStatuses = await ctx.models.AuthorStatus.findAll(
+  ctx.body.authorStatuses = await ctx.models.AuthorStatus.findByIds(
     authorIds
   );
 }
@@ -34,7 +34,7 @@ papersRouter.get('/', async ctx => {
 });
 
 papersRouter.get('/:paperId', async ctx => {
-  const papers = await ctx.models.Paper.findAll([ctx.params.paperId]);
+  const papers = await ctx.models.Paper.findByIds([ctx.params.paperId]);
   await buildResponse(ctx, papers);
 });
 

@@ -6,23 +6,21 @@ async function buildResponse(ctx, authors) {
   ctx.body.authors = authors;
   const authorIds = authors.map(a => a.id);
 
-  ctx.body.authorships = await ctx.models.Authorship.findAll(
-    {where: {authorId: {$in: authorIds}}}
+  ctx.body.authorships = await ctx.models.Authorship.findByIds(
+    'authorId', authorIds
   );
 
-  ctx.body.authorStatuses = await ctx.models.AuthorStatus.findAll(
-    {where: {authorId: {$in: authorIds}}}
+  ctx.body.authorStatuses = await ctx.models.AuthorStatus.findByIds(
+    authorIds
   );
+
   const paperIds = ctx.body.authorships.map(as => as.paperId);
+  ctx.body.papers = await ctx.models.Paper.findByIds(
+    paperIds
+  );
 
-  ctx.body.papers = await ctx.models.Paper.findAll({
-    // select: ['id', 'link', 'title', 'publicationDateTime'],
-    where: {id: {$in: paperIds}},
-    order: [['publicationDateTime', 'DESC']],
-  });
-
-  ctx.body.paperStatuses = await ctx.models.PaperStatus.findAll(
-    {where: {id: {$in: paperIds}}}
+  ctx.body.paperStatuses = await ctx.models.PaperStatus.findByIds(
+    paperIds
   );
 }
 
@@ -37,21 +35,17 @@ authorsRouter.get('/', async ctx => {
 });
 
 authorsRouter.get('/:authorId', async ctx => {
-  const authors = await ctx.models.Author.findAll({
-    where: {id: ctx.params.authorId}
-  });
+  const authors = await ctx.models.Author.findByIds([
+    ctx.params.authorId
+  ]);
 
   await buildResponse(ctx, authors);
 });
 
 authorsRouter.post('/:authorId/authorStatus/toggleStar', async ctx => {
-  const authorStatus = await ctx.models.AuthorStatus.findOne({
-    where: {authorId: ctx.params.authorId}
-  });
-
-  authorStatus.isStarred = !authorStatus.isStarred;
-  await authorStatus.save();
-
+  const authorStatus = await ctx.models.AuthorStatus.toggleStarred(
+    ctx.params.authorId
+  );
   ctx.body = {authorStatus: authorStatus};
 });
 

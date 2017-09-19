@@ -1,10 +1,17 @@
 module.exports = (knex) => {
   return {
-    findAll: async (authorIds) => {
+    findAll: async ({limit}) => {
       return await knex
         .select('authors.*')
         .from('authors')
-        .whereIn(`authors.id`, authorIds)
-    }
+        .limit(limit)
+    },
+
+    findByIds: async (authorIds) => {
+      return await knex
+        .select('authors.*')
+        .from('authors')
+        .whereIn('authors.id', authorIds)
+    },
   };
 }
