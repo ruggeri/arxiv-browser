@@ -1,5 +1,5 @@
 import { togglePaperStar } from 'actions/paper-status-actions';
-import { setState } from 'actions/paper-status-actions';
+import { toggleIsIgnored, toggleIsSavedForLaterReading } from 'actions/paper-status-actions';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Scroller from 'helpers/scroller';
@@ -26,11 +26,11 @@ class PapersList extends React.PureComponent {
   componentDidMount() {
     this.scroller.bind();
 
-    mousetrap.bind('s', () => {
-      this.props.togglePaperStar(this.selectedPaper().get('id'));
-    });
     mousetrap.bind('e', () => {
-      this.props.setIgnored(this.selectedPaper().get('id'));
+      this.props.toggleIsIgnored(this.selectedPaper().get('id'));
+    });
+    mousetrap.bind('l', () => {
+      this.props.toggleIsSavedForLaterReading(this.selectedPaper().get('id'));
     });
     mousetrap.bind('O', () => {
       const link = this.selectedPaper().get('link');
@@ -41,11 +41,14 @@ class PapersList extends React.PureComponent {
       const paperId = this.selectedPaper().get('id');
       this.props.history.push(`/papers/${paperId}`);
     });
+    mousetrap.bind('s', () => {
+      this.props.togglePaperStar(this.selectedPaper().get('id'));
+    });
   }
 
   componentWillUnmount() {
     this.scroller.unbind();
-    ['s', 'e', 'O', 'o'].forEach((k) => mousetrap.unbind(k));
+    ['e', 'l', 'O', 'o', 's',].forEach((k) => mousetrap.unbind(k));
   }
 
   selectedPaper() {
@@ -93,7 +96,8 @@ function connect(component) {
     (state) => ({}),
     (dispatch) => ({
       togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
-      setIgnored: paperId => dispatch(setState(paperId, 'isIgnored')),
+      toggleIsIgnored: paperId => dispatch(toggleIsIgnored(paperId)),
+      toggleIsSavedForLaterReading: paperId => dispatch(toggleIsSavedForLaterReading(paperId)),
     }),
   )(component)
   return component;

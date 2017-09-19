@@ -8,25 +8,12 @@ const STATE_ENUM_VALUES = [
 ];
 
 module.exports = (knex) => {
-  return {
+  const PaperStatus = {
     findByIds: async (paperIds) => {
       return await knex
         .select('paperStatuses.*')
         .from('paperStatuses')
         .whereIn(`paperStatuses.paperId`, paperIds)
-    },
-
-    setState: async (id, state) => {
-      if (!_.includes(STATE_ENUM_VALUES, state)) {
-        throw "Unknown state value!";
-      }
-
-      return (await (
-        knex('paperStatuses')
-          .returning('*')
-          .where('paperStatuses.paperId', id)
-          .update({state: state})
-      ))[0];
     },
 
     toggleStarred: async (id) => {
@@ -39,5 +26,29 @@ module.exports = (knex) => {
           })
       ))[0];
     },
+
+    toggleState: async (id, state) => {
+      if (!_.includes(STATE_ENUM_VALUES, state)) {
+        throw "Unknown state value!";
+      }
+
+      const paperStatus = (await PaperStatus.findByIds([id]))[0];
+
+      let stateToSet;
+      if (paperStatus.state === state) {
+        stateToSet = 'isAwaitingReview';
+      } else {
+        stateToSet = state;
+      }
+
+      return (await (
+        knex('paperStatuses')
+          .returning('*')
+          .where('paperStatuses.paperId', id)
+          .update({state: stateToSet})
+      ))[0];
+    },
   };
+
+  return PaperStatus;
 }

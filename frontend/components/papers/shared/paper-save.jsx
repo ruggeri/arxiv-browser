@@ -19,7 +19,7 @@ class PaperSave extends React.PureComponent {
       "fa-file-text-o": !isSaved,
     });
 
-    const clickHandler = () => setSaved(paper.get('id'));
+    const clickHandler = () => toggleSavedForLaterReading(paper.get('id'));
 
     return (
       <i className={starClassNames} onClick={clickHandler}></i>
@@ -36,6 +36,6 @@ export default connect(
     }
   },
   (dispatch) => ({
-    setSaved: (paperId) => dispatch(setState(paperId, 'isSavedForLaterReading')),
+    toggleSavedForLaterReading: (paperId) => dispatch(toggleSavedForLaterReading(paperId)),
   }),
 )(PaperSave);

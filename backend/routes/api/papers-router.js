@@ -17,10 +17,10 @@ papersRouter.get('/:paperId', async ctx => {
   await buildPapersResponse(ctx, papers);
 });
 
-papersRouter.post('/:paperId/paperStatus/state', async ctx => {
-  const paperStatus = await ctx.models.PaperStatus.setState(
+papersRouter.post('/:paperId/paperStatus/toggleState', async ctx => {
+  const paperStatus = await ctx.models.PaperStatus.toggleState(
     ctx.params.paperId,
-    ctx.request.body.state,
+    ctx.query.state,
   );
   ctx.body = {paperStatus: paperStatus};
 });

@@ -12,13 +12,20 @@ export const togglePaperStar = (paperId) => async (dispatch) => {
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 
-export const setState = (paperId, state) => async (dispatch) => {
+
+export const toggleIsSavedForLaterReading = (paperId, state) => async (dispatch) => {
   const response = await $.ajax({
-    url: `/api/papers/${paperId}/paperStatus/state`,
+    url: `/api/papers/${paperId}/paperStatus/toggleState?state=isSavedForLaterReading`,
     method: 'POST',
-    data: {
-      state: state,
-    }
+  });
+
+  dispatch(receivePaperStatuses([response.paperStatus]));
+};
+
+export const toggleIsIgnored = (paperId, state) => async (dispatch) => {
+  const response = await $.ajax({
+    url: `/api/papers/${paperId}/paperStatus/toggleState?state=isIgnored`,
+    method: 'POST',
   });
 
   dispatch(receivePaperStatuses([response.paperStatus]));

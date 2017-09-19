@@ -1,4 +1,4 @@
-import { setState } from 'actions/paper-status-actions';
+import { toggleIsIgnored } from 'actions/paper-status-actions';
 import classNames from 'classnames';
 import { isPaperIgnored } from 'queries/paper';
 import React from 'react';
@@ -19,7 +19,7 @@ class PaperTrash extends React.PureComponent {
       "fa-trash-o": !isIgnored,
     });
 
-    const clickHandler = () => setIgnored(paper.get('id'));
+    const clickHandler = () => toggleIsIgnored(paper.get('id'));
 
     return (
       <i className={starClassNames} onClick={clickHandler}></i>
@@ -36,6 +36,6 @@ export default connect(
     }
   },
   (dispatch) => ({
-    setIgnored: (paperId) => dispatch(setState(paperId, 'isIgnored')),
+    toggleIsIgnored: (paperId) => dispatch(toggleIsIgnored(paperId)),
   }),
 )(PaperTrash);
