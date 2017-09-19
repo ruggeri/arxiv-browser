@@ -27,11 +27,12 @@ async function buildResponse(ctx, papers) {
 const papersRouter = new koaRouter();
 papersRouter.get('/', async ctx => {
   // TODO: eventually I will want to paginate this...
-  const papers = await ctx.models.Paper.findAll({
-    // select: ['id', 'link', 'title', 'publicationDateTime'],
-    order: [['publicationDateTime', 'DESC']],
-    limit: 100,
-  });
+  let papers;
+  if (ctx.query.query) {
+    papers = await ctx.models.Paper.query(ctx.query.query);
+  } else {
+    papers = await ctx.models.Paper.queryByTitle('');
+  }
 
   await buildResponse(ctx, papers);
 });
