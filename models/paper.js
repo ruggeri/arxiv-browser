@@ -21,6 +21,16 @@ function chainIsAuthorStarred(paperQuery) {
 
 module.exports = (knex) => {
   const Paper = {
+    findAll: async (paperIds) => {
+      return await (
+        knex
+          .select('papers.*')
+          .from('papers')
+          .orderBy('publicationDateTime', 'DESC')
+          .whereIn('id', paperIds)
+      )
+    },
+
     query: async (options) => {
       const {query, limit, isPaperStarred, isAuthorStarred} = Object.assign({
         limit: DEFAULT_PAPERS_LIMIT,
@@ -96,29 +106,6 @@ module.exports = (knex) => {
 
       return await paperQuery;
     },
-
-    toggleArchived: async (id) => {
-      return await (
-        knex('papersStatuses')
-        .select('papersStatuses.*')
-        .where('papersStatuses.paperId', id)
-        .update({
-          'papersStatuses.isArchived': knex.raw('NOT papersStatuses.isArchived')
-        })
-      );
-    },
-
-    toggleIsStarred: async (id) => {
-      return await (
-        knex('papersStatuses')
-        .select('papersStatuses.*')
-        .where('papersStatuses.paperId', id)
-        .update({
-          'papersStatuses.isStarred': knex.raw('NOT papersStatuses.isStarred')
-        })
-      );
-    },
-
   }
 
   return Paper;
