@@ -31,7 +31,7 @@ export default connect(
     const paperId = ownProps.paper.get('id');
 
     return {
-      isIgnored: isPaperIgnored(state, {paperId}),
+      isIgnored: isPaperIgnored(state, paperId),
     }
   },
   (dispatch, ownProps) => {

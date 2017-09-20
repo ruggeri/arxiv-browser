@@ -30,7 +30,7 @@ AuthorItem = connect(
     const authorId = ownProps.author.get('id');
 
     const props = {
-      isStarred: isAuthorStarred(state, {authorId}),
+      isStarred: isAuthorStarred(state, authorId),
     };
 
     return props;

@@ -31,7 +31,7 @@ export default connect(
     const paperId = ownProps.paper.get('id');
 
     return {
-      isReviewed: isReviewed(state, {paperId}),
+      isReviewed: isReviewed(state, paperId),
     }
   },
   (dispatch, ownProps) => {

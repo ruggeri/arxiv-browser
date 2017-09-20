@@ -2,7 +2,7 @@ import { fetchAuthor } from 'actions/author-actions';
 import { PersistablePapersList } from 'components/papers/shared/papers-list.jsx';
 import AuthorStar from 'components/authors/shared/author-star.jsx';
 import { ScrollRestorer } from 'helpers/component-state-store';
-import { getAuthorById } from 'queries/author';
+import { getAuthor } from 'queries/author';
 import { papersForAuthor } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -44,9 +44,9 @@ export default connect(
     const authorId = parseInt(ownProps.match.params.authorId);
 
     return {
-      author: getAuthorById(state, authorId),
+      author: getAuthor(state, authorId),
       authorId: authorId,
-      authoredPapers: papersForAuthor(state, {authorId})
+      authoredPapers: papersForAuthor(state, authorId)
     };
   },
   (dispatch) => ({

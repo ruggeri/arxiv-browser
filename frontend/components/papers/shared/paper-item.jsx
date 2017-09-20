@@ -6,7 +6,7 @@ import PaperStar from 'components/papers/shared/paper-star.jsx';
 import PaperTrash from './paper-items/paper-trash.jsx';
 import _ from 'lodash';
 import { authorsForPaper } from 'queries/author';
-import { getPaperById, isPaperStarred } from 'queries/paper';
+import { getPaper, isPaperStarred } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -92,11 +92,11 @@ PaperItem = connect(
     const paperId = ownProps.paper.get('id');
 
     const props = {
-      isStarred: isPaperStarred(state, {paperId}),
+      isStarred: isPaperStarred(state, paperId),
     };
 
     if (ownProps.showAuthors) {
-      props.authors = authorsForPaper(state, {paperId});
+      props.authors = authorsForPaper(state, paperId);
     }
 
     return props;

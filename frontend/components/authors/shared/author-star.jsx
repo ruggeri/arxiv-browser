@@ -32,7 +32,7 @@ export default connect(
     const authorId = ownProps.author.get('id');
 
     return {
-      isStarred: isAuthorStarred(state, {authorId}),
+      isStarred: isAuthorStarred(state, authorId),
     }
   }, (dispatch) => ({
     toggleAuthorStar: (authorId) => dispatch(toggleAuthorStar(authorId)),

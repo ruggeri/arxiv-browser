@@ -31,7 +31,7 @@ export default connect(
     const paperId = ownProps.paper.get('id');
 
     return {
-      isSaved: isPaperSavedForLaterReading(state, {paperId}),
+      isSaved: isPaperSavedForLaterReading(state, paperId),
     }
   },
   (dispatch, ownProps) => {

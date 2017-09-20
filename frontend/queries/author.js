@@ -1,16 +1,19 @@
 import { _paperId } from 'queries/paper';
 import I from 'immutable';
 
-export function _authorId({author, authorId}) {
-  if (author) {
-    authorId = author.get('id');
+export function _authorId(authorOrId) {
+  if (!authorOrId) {
+    console.log(authorOrId);
+    throw "No author or id given?";
   }
 
-  if (!authorId) {
-    throw "No paper id given?";
+  if (_.isNumber(authorOrId)) {
+    return authorOrId;
+  } else if (_.isString(authorOrId)) {
+    return Number(authorOrId);
+  } else {
+    return authorOrId.get('id');
   }
-
-  return authorId;
 }
 
 export const getAllAuthors = (state) => {
@@ -29,13 +32,13 @@ export const authorsForPaper = (state, paperOrId) => {
   return authors;
 }
 
-export const getAuthorById = (state, authorId) => {
+export const getAuthor = (state, authorOrId) => {
+  const authorId = _authorId(authorOrId);
   return state.authors.get(authorId);
 }
 
 export const isAuthorStarred = (state, authorOrId) => {
   const authorId = _authorId(authorOrId);
-
   const authorStatus = state.authorStatuses.get(authorId);
   return authorStatus && authorStatus.get('isStarred');
 }
@@ -53,7 +56,7 @@ export const searchAuthors = (state, queryObj, authors) => {
     if (!queryObj.isAuthorStarred) {
       return true;
     } else {
-      return isAuthorStarred(author);
+      return isAuthorStarred(state, author);
     }
   }).toList();
 }

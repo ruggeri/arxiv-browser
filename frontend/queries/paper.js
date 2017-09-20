@@ -1,58 +1,67 @@
 import I from 'immutable';
 import { _authorId, authorsForPaper, isAuthorStarred } from 'queries/author';
 
-export function _paperId({paper, paperId}) {
-  if (paper) {
-    paperId = paper.get('id');
+const PAPER_STATUS_STATES = [
+  'isAwaitingReview',
+  'isIgnored',
+  'isReviewed',
+  'isSavedForLaterReading'
+];
+
+export function _paperId(paperOrId) {
+  if (!paperOrId) {
+    console.log(paperOrId);
+    throw "No paper or id given?";
   }
 
-  if (!paperId) {
-    throw "No paper id given?";
+  if (_.isNumber(paperOrId)) {
+    return paperOrId;
+  } else if (_.isString(paperOrId)) {
+    return Number(paperOrId);
+  } else {
+    return paperOrId.get('id');
   }
-
-  return paperId;
 }
 
 export const getAllPapers = (state) => {
-  return state.papers.valueSeq().toList();
+  return (
+    state.papers.valueSeq().toList()
+    .sortBy(p => p.get('publicationDateTime')).reverse()
+  );
 }
 
-export const getPaperById = (state, paperId) => {
+export const getPaper = (state, paperOrId) => {
+  const paperId = _paperId(paperOrId);
   return state.papers.get(paperId);
 }
 
-export const hasStarredAuthor = (state, paperOrId) => {
+export const getPaperStatus = (state, paperOrId) => {
   const paperId = _paperId(paperOrId);
+  return state.paperStatuses.get(paperId);
+}
 
-  const authors = authorsForPaper(state, {paperId});
-  return authors.some(a => isAuthorStarred(state, {author: a}));
+export const paperHasStarredAuthor = (state, paperOrId) => {
+  const authors = authorsForPaper(state, paperOrId);
+  return authors.some(author => isAuthorStarred(state, a));
 }
 
 export const isPaperIgnored = (state, paperOrId) => {
-  const paperId = _paperId(paperOrId);
-
-  const paperStatus = state.paperStatuses.get(paperId);
+  const paperStatus = getPaperStatus(state, paperOrId);
   return paperStatus && paperStatus.get('state') == 'isIgnored';
 }
 
 export const isReviewed = (state, paperOrId) => {
-  const paperId = _paperId(paperOrId);
-
-  const paperStatus = state.paperStatuses.get(paperId);
+  const paperStatus = getPaperStatus(state, paperOrId);
   return paperStatus && paperStatus.get('state') == 'isReviewed';
 }
 
 export const isPaperSavedForLaterReading = (state, paperOrId) => {
-  const paperId = _paperId(paperOrId);
-
-  const paperStatus = state.paperStatuses.get(paperId);
+  const paperStatus = getPaperStatus(state, paperOrId);
   return paperStatus && paperStatus.get('state') == 'isSavedForLaterReading';
 }
 
 export const isPaperStarred = (state, paperOrId) => {
-  const paperId = _paperId(paperOrId);
-
-  const paperStatus = state.paperStatuses.get(paperId);
+  const paperStatus = getPaperStatus(state, paperOrId);
   return paperStatus && paperStatus.get('isStarred');
 }
 
@@ -68,24 +77,67 @@ export const papersForAuthor = (state, authorOrId) => {
   return papers.toList();
 };
 
-// TODO: support filters on the queryObj.
-export const searchPapers = (state, queryObj, papers, {limitResults} = {}) => {
+export function paperTitleMatchesQuery(state, paperOrId, queryObj) {
   const query = queryObj.query.toLowerCase();
+  const paperTitle = getPaper(state, paperOrId).get('title').toLowerCase();
+  return query.includes(paperTitle);
+}
 
-  let matchedItems = papers.filter(paper => {
-    if (paper.get('title').toLowerCase().includes(query)) {
+export function paperAuthorNameMatchesQuery(state, paperOrId, queryObj) {
+  const authors = authorsForPaper(state, paperOrId);
+  return authors.some(author => (
+    author.get('name').toLowerCase().includes(queryObj.query)
+  ));
+}
+
+export function paperStateMatchesQuery(state, paperOrId, queryObj) {
+  const selectedPaperStates = PAPER_STATUS_STATES.filter(
+    state => queryObj[state]
+  );
+
+  if (selectedPaperStates.length == 0) {
+    return true;
+  }
+
+  const paperStatus = getPaperStatus(state, paperOrId);
+  return selectedPaperStates.includes(paperStatus.get('state'));
+}
+
+// TODO: support filters on the queryObj.
+export function searchPapers(state, queryObj, papers, {limitResults} = {}) {
+  let matchedResults = state.papers.toList().filter(paper => {
+    if (paperTitleMatchesQuery(state, paper, queryObj)) {
       return true;
+    } else if (paperAuthorNameMatchesQuery(state, paper, queryObj)) {
+      return true;
+    } else {
+      return false;
     }
+  });
 
-    const authors = authorsForPaper(state, {paper});
-    return authors.some(author => (
-      author.get('name').toLowerCase().includes(query)
-    ));
-  }).sortBy(paper => paper.get('publicationDateTime')).reverse();
+  if (queryObj.requirePaperStarred) {
+    matchedResults = matchedResults.filter(paper => {
+      return isPaperStarred(state, paper);
+    });
+  }
+
+  if (queryObj.requireAuthorStarred) {
+    matchedResults = matchedResults.filter(paper => {
+      return paperHasStarredAuthor(state, paper);
+    });
+  }
+
+  matchedResults = matchedResults.filter(paper => {
+    return paperStateMatchesQuery(state, paper, queryObj);
+  });
+
+  matchedResults = matchedResults.sortBy(
+    paper => paper.get('publicationDateTime')
+  ).reverse();
 
   if (limitResults) {
     matchedItems = matchedItems.take(limitResults);
   }
 
-  return matchedItems.toList();
+  return matchedResults.toList();
 }

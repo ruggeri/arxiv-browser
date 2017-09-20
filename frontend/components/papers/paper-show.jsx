@@ -2,7 +2,7 @@ import { fetchPaper } from 'actions/paper-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import { authorsForPaper } from 'queries/author';
-import { getPaperById } from 'queries/paper';
+import { getPaper } from 'queries/paper';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -37,7 +37,7 @@ export default connect(
     const paperId = parseInt(ownProps.match.params.paperId);
 
     return {
-      paper: getPaperById(state, paperId),
+      paper: getPaper(state, paperId),
       paperId: paperId,
       authors: authorsForPaper(state, {paperId}),
     };

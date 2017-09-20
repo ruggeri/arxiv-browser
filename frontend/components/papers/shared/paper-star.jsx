@@ -32,7 +32,7 @@ export default connect(
     const paperId = ownProps.paper.get('id');
 
     return {
-      isStarred: isPaperStarred(state, {paperId}),
+      isStarred: isPaperStarred(state, paperId),
     }
   },
   (dispatch) => ({
