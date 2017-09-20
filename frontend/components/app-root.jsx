@@ -11,21 +11,12 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 const Routes = () => (
   <Switch>
-    <Redirect exact path="/" to="/papers"/>
+    <Redirect exact path="/" to="/papers/search"/>
 
-    <Route exact path="/authors" component={AuthorsIndex}/>
-    <Route exact path="/authors/starred" component={(props) => (
-      <AuthorsIndex filterName="starred"/>
-    )}/>
+    <Route exact path="/authors/search" component={AuthorsIndex}/>
     <Route exact path="/authors/:authorId" component={AuthorShow}/>
-    <Route exact path="/authors/starred/papers" component={(props) => (
-      <PapersIndex filterName="starredAuthors"/>
-    )}/>
 
-    <Route exact path="/papers" component={PapersIndex}/>
-    <Route exact path="/papers/starred" component={(props) => (
-      <PapersIndex filterName="starred"/>
-    )}/>
+    <Route exact path="/papers/search" component={PapersIndex}/>
     <Route exact path="/papers/:paperId" component={PaperShow}/>
   </Switch>
 );
