@@ -4,8 +4,6 @@ import {ScrollRestorer} from 'helpers/component-state-store/scroll-restorer.jsx'
 
 class PapersIndex extends React.PureComponent {
   render() {
-    const { papers } = this.props;
-
     return (
       <div>
         <ScrollRestorer/>

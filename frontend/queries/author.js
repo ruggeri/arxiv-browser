@@ -39,3 +39,21 @@ export const isAuthorStarred = (state, authorOrId) => {
   const authorStatus = state.authorStatuses.get(authorId);
   return authorStatus && authorStatus.get('isStarred');
 }
+
+export const searchAuthors = (state, query, authors) => {
+  return authors.filter(author => {
+    const nameMatches = (
+      author.get('name').toLowerCase().includes(query.query)
+    );
+
+    if (!nameMatches) {
+      return false;
+    }
+
+    if (!query.isAuthorStarred) {
+      return true;
+    } else {
+      return isAuthorStarred(author);
+    }
+  }).toList();
+}
