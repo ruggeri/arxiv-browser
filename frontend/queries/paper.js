@@ -80,7 +80,7 @@ export const papersForAuthor = (state, authorOrId) => {
 export function paperTitleMatchesQuery(state, paperOrId, queryObj) {
   const query = queryObj.query.toLowerCase();
   const paperTitle = getPaper(state, paperOrId).get('title').toLowerCase();
-  return query.includes(paperTitle);
+  return paperTitle.includes(query);
 }
 
 export function paperAuthorNameMatchesQuery(state, paperOrId, queryObj) {
