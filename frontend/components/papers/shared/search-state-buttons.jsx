@@ -20,7 +20,7 @@ export default class SearchStateButtons extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.state = {
-      queryObj: {},
+      queryObj: null,
     };
   }
 
@@ -28,11 +28,18 @@ export default class SearchStateButtons extends React.Component {
     const stateName = $(e.currentTarget).data('state-name');
     const newQueryObj = Object.assign(
       {},
-      this.state.queryObj,
-      {[stateName]: !this.state.queryObj[stateName]},
+      this.queryObj(),
+      {[stateName]: !this.queryObj()[stateName]},
     );
 
     this.setState({queryObj: newQueryObj});
+  }
+
+  queryObj() {
+    const stateQueryObj = this.state.queryObj;
+    return (
+      (stateQueryObj !== null) ? stateQueryObj : this.props.defaultQueryObj
+    );
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -45,7 +52,7 @@ export default class SearchStateButtons extends React.Component {
   }
 
   render() {
-    const {queryObj} = this.state;
+    const queryObj = this.queryObj();
 
     return (
       <div className="form-check search-state-checkboxes">
