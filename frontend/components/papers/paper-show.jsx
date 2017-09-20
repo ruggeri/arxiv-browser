@@ -39,7 +39,7 @@ export default connect(
     return {
       paper: getPaper(state, paperId),
       paperId: paperId,
-      authors: authorsForPaper(state, {paperId}),
+      authors: authorsForPaper(state, paperId),
     };
   },
   (dispatch) => ({
