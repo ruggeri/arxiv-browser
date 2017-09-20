@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,6 +19,10 @@ export default class DebouncedTextInput extends React.Component {
     this.state = {
       query: null,
     };
+  }
+
+  focus() {
+    $(this.input).focus();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -52,6 +57,7 @@ export default class DebouncedTextInput extends React.Component {
           className="form-control"
           id="textInput"
           onChange={this.queryChangeHandler}
+          ref={(input) => { this.input = input }}
           type="text"
           value={query}
         />

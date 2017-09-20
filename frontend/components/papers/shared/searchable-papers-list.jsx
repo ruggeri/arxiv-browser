@@ -24,6 +24,7 @@ class SearchablePapersList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.keyHandler = this.keyHandler.bind(this);
     this.queryChangeHandler = this.queryChangeHandler.bind(this);
     this.searcher = new Searcher({
       fetchNewResults: this.fetchNewResults.bind(this),
@@ -42,6 +43,23 @@ class SearchablePapersList extends React.Component {
 
   componentWillMount() {
     this.searcher.componentWillMount(this.props, this.state);
+    $(document.body).keydown(this.keyHandler);
+  }
+
+  keyHandler(e) {
+    e = e.originalEvent;
+    if (e.code === 'Escape') {
+      // blur out of search
+      if (document.activeElement) {
+        $(document.activeElement).blur();
+      }
+    } else if (e.code === 'KeyZ') {
+      _.delay(() => this.input.focus());
+    }
+  }
+
+  componentWillUnmount() {
+    $(document.body).off('keydown', this.keyHandler);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -89,7 +107,11 @@ class SearchablePapersList extends React.Component {
     return (
       <div>
         <form className="searchable-papers-list-form">
-          <DebouncedTextInput queryChangeHandler={this.queryChangeHandler} query={query.query}/>
+          <DebouncedTextInput
+            queryChangeHandler={this.queryChangeHandler}
+            query={query.query}
+            ref={(input) => { this.input = input }}
+          />
           <SearchStateButtons/>
         </form>
         <PapersListPager papers={matchResults}/>
