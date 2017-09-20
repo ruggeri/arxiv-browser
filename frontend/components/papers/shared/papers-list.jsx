@@ -1,5 +1,5 @@
 import { togglePaperStar } from 'actions/paper-status-actions';
-import { toggleIsIgnored, toggleIsSavedForLaterReading } from 'actions/paper-status-actions';
+import { toggleIsIgnored, toggleIsReviewed, toggleIsSavedForLaterReading } from 'actions/paper-status-actions';
 import PaperItem from 'components/papers/shared/paper-item.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Scroller from 'helpers/scroller';
@@ -41,6 +41,9 @@ class PapersList extends React.PureComponent {
       const paperId = this.selectedPaper().get('id');
       this.props.history.push(`/papers/${paperId}`);
     });
+    mousetrap.bind('r', () => {
+      this.props.toggleIsReviewed(this.selectedPaper().get('id'));
+    });
     mousetrap.bind('s', () => {
       this.props.togglePaperStar(this.selectedPaper().get('id'));
     });
@@ -48,7 +51,7 @@ class PapersList extends React.PureComponent {
 
   componentWillUnmount() {
     this.scroller.unbind();
-    ['e', 'l', 'O', 'o', 's',].forEach((k) => mousetrap.unbind(k));
+    ['e', 'l', 'O', 'o', 'r', 's',].forEach((k) => mousetrap.unbind(k));
   }
 
   selectedPaper() {
@@ -95,9 +98,10 @@ function connect(component) {
   component = reactReduxConnect(
     (state) => ({}),
     (dispatch) => ({
-      togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
       toggleIsIgnored: paperId => dispatch(toggleIsIgnored(paperId)),
+      toggleIsReviewed: paperId => dispatch(toggleIsReviewed(paperId)),
       toggleIsSavedForLaterReading: paperId => dispatch(toggleIsSavedForLaterReading(paperId)),
+      togglePaperStar: paperId => dispatch(togglePaperStar(paperId)),
     }),
   )(component)
   return component;
