@@ -68,8 +68,9 @@ export const papersForAuthor = (state, authorOrId) => {
   return papers.toList();
 };
 
-export const searchPapers = (state, query, papers, {limitResults} = {}) => {
-  query = query.toLowerCase();
+// TODO: support filters on the queryObj.
+export const searchPapers = (state, queryObj, papers, {limitResults} = {}) => {
+  const query = queryObj.query.toLowerCase();
 
   let matchedItems = papers.filter(paper => {
     if (paper.get('title').toLowerCase().includes(query)) {

@@ -17,7 +17,9 @@ export default class DebouncedTextInput extends React.Component {
     );
     this.queryChangeHandler = this.queryChangeHandler.bind(this);
     this.state = {
-      query: null,
+      queryObj: {
+        query: null,
+      },
     };
   }
 
@@ -26,7 +28,10 @@ export default class DebouncedTextInput extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const queryDidChange = !_.isEqual(this.state.query, nextState.query);
+    const queryDidChange = !_.isEqual(
+      this.state.queryObj, nextState.queryObj
+    );
+
     if (!queryDidChange) {
       return false;
     }
@@ -36,19 +41,25 @@ export default class DebouncedTextInput extends React.Component {
   }
 
   queryChangeHandler(e) {
-    this.setState({query: e.target.value});
+    const newQueryObj = Object.assign(
+      {}, this.state.queryObj, {query: e.target.value}
+    );
+    this.setState({queryObj: newQueryObj});
   }
 
   parentQueryChangeHandler(nextState = null) {
     const state = nextState || this.state
-    this.props.queryChangeHandler(state.query);
+    this.props.queryChangeHandler(state.queryObj);
   }
 
   render() {
     // We will use props.query if nothing has been typed: this way
     // a parent can "initialize" a starting query. This can be helpful
     // if they are restoring a query from persisted state.
-    const query = this.state.query !== null ? this.state.query : this.props.query;
+    const stateQuery = this.state.queryObj.query;
+    const query = (
+      stateQuery !== null ? stateQuery : this.props.defaultQuery
+    );
 
     return (
       <div className="form-group mr-2">

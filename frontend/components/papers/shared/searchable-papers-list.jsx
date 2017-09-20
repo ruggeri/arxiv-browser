@@ -33,7 +33,7 @@ class SearchablePapersList extends React.Component {
 
     this.state = {
       matchResults: List(),
-      query: {
+      queryObj: {
         query: '',
         requirePaperStarred: false,
         requireAuthorStarred: false,
@@ -63,7 +63,9 @@ class SearchablePapersList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const queryDidChange = !_.isEqual(this.state.query, nextState.query);
+    const queryDidChange = !_.isEqual(
+      this.state.queryObj, nextState.queryObj
+    );
     const itemsDidChange = !this.props.papers.equals(nextProps.papers);
     const matchResultsDidChange = (
       !this.state.matchResults.equals(nextState.matchResults)
@@ -80,15 +82,17 @@ class SearchablePapersList extends React.Component {
     props.fetchPaperQueryResults(state.query);
   }
 
-  queryChangeHandler(query) {
-    const newQuery = Object.assign({}, this.state.query, {query: query})
-    this.setState({query: newQuery});
+  queryChangeHandler(queryObj) {
+    const newQueryObj = Object.assign(
+      {}, this.state.queryObj, queryObj
+    );
+    this.setState({queryObj: newQueryObj});
   }
 
   updateMatchResults(props, state) {
     // TODO: Extend searchPapers to deal with query object!
     let newMatchResults = props.searchPapers(
-      state.query.query,
+      state.queryObj,
       props.papers,
     );
 
@@ -102,14 +106,14 @@ class SearchablePapersList extends React.Component {
   }
 
   render() {
-    const {matchResults, query} = this.state;
+    const {matchResults, queryObj} = this.state;
 
     return (
       <div>
         <form className="searchable-papers-list-form">
           <DebouncedTextInput
             queryChangeHandler={this.queryChangeHandler}
-            query={query.query}
+            defaultQuery={queryObj.query}
             ref={(input) => { this.input = input }}
           />
           <SearchStateButtons/>
@@ -128,7 +132,7 @@ function performReactReduxConnect(component) {
   return ReactRedux.connect(
     (state) => ({
       papers: getAllPapers(state),
-      searchPapers: (query, papers) => searchPapers(state, query, papers),
+      searchPapers: (queryObj, papers) => searchPapers(state, queryObj, papers),
     }),
     (dispatch) => ({
       fetchPaperQueryResults: (query) => dispatch(fetchPaperQueryResults(query)),
