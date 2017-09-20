@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 class PaperTrash extends React.PureComponent {
   render() {
-    const { isIgnored, paper, setIgnored } = this.props;
+    const { isIgnored, paper, toggleIsIgnored } = this.props;
 
     // In case we are are still loading.
     if (isIgnored === undefined) {
@@ -19,10 +19,8 @@ class PaperTrash extends React.PureComponent {
       "fa-trash-o": !isIgnored,
     });
 
-    const clickHandler = () => toggleIsIgnored(paper.get('id'));
-
     return (
-      <i className={starClassNames} onClick={clickHandler}></i>
+      <i className={starClassNames} onClick={toggleIsIgnored}></i>
     );
   }
 }
@@ -35,7 +33,11 @@ export default connect(
       isIgnored: isPaperIgnored(state, {paperId}),
     }
   },
-  (dispatch) => ({
-    toggleIsIgnored: (paperId) => dispatch(toggleIsIgnored(paperId)),
-  }),
+  (dispatch, ownProps) => {
+    const paperId = ownProps.paper.get('id');
+
+    return {
+      toggleIsIgnored: () => dispatch(toggleIsIgnored(paperId)),
+    };
+  },
 )(PaperTrash);

@@ -21,9 +21,9 @@ const PaperTitleRow = ({ isStarred, paper }) => (
     </div>
 
     <div className="buttons">
-      <PaperStar paper={paper}/>
-      <PaperTrash paper={paper}/>
-      <PaperSave paper={paper}/>
+      <PaperStar paper={paper}/>{' '}
+      <PaperTrash paper={paper}/>{' '}
+      <PaperSave paper={paper}/>{' '}
     </div>
   </div>
 );

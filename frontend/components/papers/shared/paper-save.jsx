@@ -1,4 +1,4 @@
-import { setState } from 'actions/paper-status-actions';
+import { toggleIsSavedForLaterReading } from 'actions/paper-status-actions';
 import classNames from 'classnames';
 import { isPaperSavedForLaterReading } from 'queries/paper';
 import React from 'react';
@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 class PaperSave extends React.PureComponent {
   render() {
-    const { isSaved, paper, setSaved } = this.props;
+    const { isSaved, paper, toggleIsSavedForLaterReading } = this.props;
 
     // In case we are are still loading.
     if (isSaved === undefined) {
@@ -19,10 +19,8 @@ class PaperSave extends React.PureComponent {
       "fa-file-text-o": !isSaved,
     });
 
-    const clickHandler = () => toggleSavedForLaterReading(paper.get('id'));
-
     return (
-      <i className={starClassNames} onClick={clickHandler}></i>
+      <i className={starClassNames} onClick={toggleIsSavedForLaterReading}></i>
     );
   }
 }
@@ -35,7 +33,11 @@ export default connect(
       isSaved: isPaperSavedForLaterReading(state, {paperId}),
     }
   },
-  (dispatch) => ({
-    toggleSavedForLaterReading: (paperId) => dispatch(toggleSavedForLaterReading(paperId)),
-  }),
+  (dispatch, ownProps) => {
+    const paperId = ownProps.paper.get('id');
+
+    return {
+      toggleIsSavedForLaterReading: () => dispatch(toggleIsSavedForLaterReading(paperId)),
+    };
+  },
 )(PaperSave);
