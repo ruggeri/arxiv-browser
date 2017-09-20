@@ -88,8 +88,10 @@ class SearchablePapersList extends React.Component {
 
     return (
       <div>
-        <DebouncedTextInput queryChangeHandler={this.queryChangeHandler} query={query.query}/>
-        <SearchStateButtons/>
+        <form className="searchable-papers-list-form">
+          <DebouncedTextInput queryChangeHandler={this.queryChangeHandler} query={query.query}/>
+          <SearchStateButtons/>
+        </form>
         <PapersListPager papers={matchResults}/>
       </div>
     )

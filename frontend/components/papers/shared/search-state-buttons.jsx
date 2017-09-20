@@ -3,13 +3,13 @@ import $ from 'jquery';
 import React from 'react';
 
 const SearchStateButton = ({onChange, stateName, value}) => (
-  <label className="form-check-label">
+  <label className="form-check-label mr-2">
     <input
       className="form-check-input"
       type="checkbox"
       onChange={onChange}
       data-state-name={stateName}
-      value={value}/>
+      value={value}/>{' '}
     {stateName}
   </label>
 )
@@ -36,7 +36,7 @@ export default class SearchStateButtons extends React.Component {
     const {query} = this.state;
 
     return (
-      <div className="search-state-buttons">
+      <div className="form-check search-state-checkboxes">
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isAwaitingReview"

@@ -46,11 +46,15 @@ export default class DebouncedTextInput extends React.Component {
     const query = this.state.query !== null ? this.state.query : this.props.query;
 
     return (
-      <div>
-        <label>
-          Search:{' '}
-          <input type="text" onChange={this.queryChangeHandler} value={query}/>
-        </label>
+      <div className="form-group mr-2">
+        <label className="mr-2" htmlFor="textInput">Search:</label>
+        <input
+          className="form-control"
+          id="textInput"
+          onChange={this.queryChangeHandler}
+          type="text"
+          value={query}
+        />
       </div>
     )
   }

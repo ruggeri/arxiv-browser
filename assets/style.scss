@@ -29,3 +29,11 @@
     color: black;
   }
 }
+
+.searchable-papers-list-form {
+  @extend .form-inline;
+
+  input[type="text"] {
+    padding: 0.33rem 0.5rem;
+  }
+}
