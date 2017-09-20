@@ -31,9 +31,17 @@
 }
 
 .searchable-papers-list-form {
-  @extend .form-inline;
-
   input[type="text"] {
     padding: 0.33rem 0.5rem;
+  }
+
+  .state-search-buttons {
+    @extend .form-check;
+    @extend .form-check-inline;
+
+    .search-buttons-title {
+      @extend .mr-2;
+      @extend .font-weight-bold;
+    }
   }
 }

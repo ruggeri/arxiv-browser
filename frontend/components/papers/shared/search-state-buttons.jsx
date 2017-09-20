@@ -59,7 +59,10 @@ export default class SearchStateButtons extends React.Component {
     const queryObj = this.queryObj();
 
     return (
-      <div className="form-check search-state-checkboxes">
+      <div className="state-search-buttons">
+        <label className="search-buttons-title">
+          Filters:
+        </label>
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isAwaitingReview"
