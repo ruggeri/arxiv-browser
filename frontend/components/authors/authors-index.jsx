@@ -2,7 +2,7 @@ import { fetchAuthorQueryResults } from 'actions/author-actions';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import { ScrollRestorer } from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
-import { PersistableSearcher } from 'helpers/searcher.jsx';
+// import { PersistableSearcher } from 'helpers/searcher.jsx';
 import React from 'react';
 import { connect } from 'react-redux';
 import { getAllAuthors, isAuthorStarred } from 'queries/author';
