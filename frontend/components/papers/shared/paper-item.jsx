@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
 import PaperMarkReviewed from './paper-items/paper-mark-reviewed.jsx';
-import PaperSave from './paper-items/paper-mark-reviewed.jsx';
+import PaperSave from './paper-items/paper-save.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
-import PaperTrash from './paper-items/paper-mark-reviewed.jsx';
+import PaperTrash from './paper-items/paper-trash.jsx';
 import _ from 'lodash';
 import { authorsForPaper } from 'queries/author';
 import { getPaperById, isPaperStarred } from 'queries/paper';
