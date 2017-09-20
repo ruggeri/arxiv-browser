@@ -44,8 +44,6 @@ class SearchablePapersList extends React.Component {
       matchResults: List(),
       queryObj: {
         query: '',
-        requirePaperStarred: false,
-        requireAuthorStarred: false,
       },
     };
   }

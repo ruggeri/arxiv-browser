@@ -37,9 +37,13 @@ export default class SearchStateButtons extends React.Component {
 
   queryObj() {
     const stateQueryObj = this.state.queryObj;
-    return (
-      (stateQueryObj !== null) ? stateQueryObj : this.props.defaultQueryObj
-    );
+    if (stateQueryObj !== null) {
+      return stateQueryObj;
+    } else if (this.props.defaultQueryObj) {
+      return this.props.defaultQueryObj;
+    } else {
+      return {};
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -72,6 +76,14 @@ export default class SearchStateButtons extends React.Component {
           onChange={this.handleChange}
           stateName="isSavedForLaterReading"
           query={queryObj.isSavedForLaterReading}/>{' '}
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isPaperStarred"
+          query={queryObj.isPaperStarred}/>{' '}
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isAuthorStarred"
+          query={queryObj.isAuthorStarred}/>{' '}
       </div>
     );
   }

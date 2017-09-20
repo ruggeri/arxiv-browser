@@ -42,7 +42,7 @@ export const getPaperStatus = (state, paperOrId) => {
 
 export const paperHasStarredAuthor = (state, paperOrId) => {
   const authors = authorsForPaper(state, paperOrId);
-  return authors.some(author => isAuthorStarred(state, a));
+  return authors.some(author => isAuthorStarred(state, author));
 }
 
 export const isPaperIgnored = (state, paperOrId) => {
@@ -115,13 +115,13 @@ export function searchPapers(state, queryObj, papers, {limitResults} = {}) {
     }
   });
 
-  if (queryObj.requirePaperStarred) {
+  if (queryObj.isPaperStarred) {
     matchedResults = matchedResults.filter(paper => {
       return isPaperStarred(state, paper);
     });
   }
 
-  if (queryObj.requireAuthorStarred) {
+  if (queryObj.isAuthorStarred) {
     matchedResults = matchedResults.filter(paper => {
       return paperHasStarredAuthor(state, paper);
     });
