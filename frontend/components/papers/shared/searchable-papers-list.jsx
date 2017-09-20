@@ -1,5 +1,6 @@
 import {fetchPaperQueryResults} from 'actions/paper-actions';
 import {PersistablePapersList} from 'components/papers/shared/papers-list.jsx';
+import SearchStateButtons from 'components/papers/shared/search-state-buttons.jsx';
 import ComponentStateStore from 'helpers/component-state-store';
 import Pager from 'helpers/pager';
 import DebouncedTextInput from 'helpers/debounced-text-input.jsx'
@@ -88,6 +89,7 @@ class SearchablePapersList extends React.Component {
     return (
       <div>
         <DebouncedTextInput queryChangeHandler={this.queryChangeHandler} query={query.query}/>
+        <SearchStateButtons/>
         <PapersListPager papers={matchResults}/>
       </div>
     )

@@ -21,3 +21,15 @@
 .paper.starred {
   @extend .font-weight-bold;
 }
+
+.search-state-buttons {
+  .search-state-button {
+    cursor: pointer;
+  }
+
+  .search-state-button:hover {
+    .action-name {
+      text-decoration: underline;
+    }
+  }
+}
