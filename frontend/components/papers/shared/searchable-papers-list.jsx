@@ -28,6 +28,15 @@ class SearchablePapersList extends React.Component {
     this.queryChangeHandler = this.queryChangeHandler.bind(this);
     this.searcher = new Searcher({
       fetchNewResults: this.fetchNewResults.bind(this),
+      didMatchResultsChange: (oldResults, newResults) => (
+        !oldResults.equals(newResults)
+      ),
+      didItemsChange: (oldItems, newItems) => (
+        !oldItems.equals(newItems)
+      ),
+      didQueryChange: (oldQuery, newQuery) => (
+        !_.isEqual(oldQuery, newQuery)
+      ),
       updateMatchResults: this.updateMatchResults.bind(this),
     });
 
@@ -42,7 +51,7 @@ class SearchablePapersList extends React.Component {
   }
 
   componentWillMount() {
-    this.searcher.componentWillMount(this.props, this.state);
+    this.searcher.componentWillMount();
     $(document.body).keydown(this.keyHandler);
   }
 
@@ -62,24 +71,34 @@ class SearchablePapersList extends React.Component {
     $(document.body).off('keydown', this.keyHandler);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const queryDidChange = !_.isEqual(
-      this.state.queryObj, nextState.queryObj
-    );
-    const itemsDidChange = !this.props.papers.equals(nextProps.papers);
-    const matchResultsDidChange = (
-      !this.state.matchResults.equals(nextState.matchResults)
-    );
+  setState(stateUpdate, cb) {
+    const newState = Object.assign({}, this.state, stateUpdate);
+    this.searcher.setState({
+      currentQuery: this.state.queryObj,
+      newQuery: newState.queryObj,
+    });
 
-    return this.searcher.shouldComponentUpdate(
-      {queryDidChange, itemsDidChange, matchResultsDidChange},
-      nextProps,
-      nextState,
-    );
+    super.setState(stateUpdate, cb);
   }
 
-  fetchNewResults(props, state) {
-    props.fetchPaperQueryResults(state.query);
+  componentWillReceiveProps(nextProps) {
+    this.searcher.componentWillReceiveProps({
+      currentItems: this.props.papers,
+      nextItems: nextProps.papers
+    });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.searcher.shouldComponentUpdate({
+      currentQueryObj: this.state.queryObj,
+      currentMatchResults: this.state.matchResults,
+      nextQueryObj: nextState.queryObj,
+      nextMatchResults: nextState.matchResults,
+    });
+  }
+
+  fetchNewResults() {
+    this.props.fetchPaperQueryResults(this.state.queryObj);
   }
 
   queryChangeHandler(queryObj) {
@@ -89,16 +108,16 @@ class SearchablePapersList extends React.Component {
     this.setState({queryObj: newQueryObj});
   }
 
-  updateMatchResults(props, state) {
+  updateMatchResults() {
     // TODO: Extend searchPapers to deal with query object!
-    let newMatchResults = props.searchPapers(
-      state.queryObj,
-      props.papers,
+    let newMatchResults = this.props.searchPapers(
+      this.state.queryObj,
+      this.props.papers,
     );
 
-    if (props.resultsLimit) {
+    if (this.props.resultsLimit) {
       newMatchResults = newMatchResults.take(
-        props.resultsLimit
+        this.props.resultsLimit
       );
     }
 

@@ -31,7 +31,7 @@ class SearchableAuthorsList extends React.Component {
 
     this.state = {
       matchResults: List(),
-      query: {
+      queryObj: {
         query: '',
         isAuthorStarred: false,
       },
@@ -43,7 +43,9 @@ class SearchableAuthorsList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const queryDidChange = !_.isEqual(this.state.query, nextState.query);
+    const queryDidChange = !_.isEqual(
+      this.state.queryObj, nextState.queryObj
+    );
     const itemsDidChange = !this.props.authors.equals(nextProps.authors);
     const matchResultsDidChange = (
       !this.state.matchResults.equals(nextState.matchResults)
@@ -60,15 +62,17 @@ class SearchableAuthorsList extends React.Component {
     props.fetchAuthorQueryResults(state.query);
   }
 
-  queryChangeHandler(query) {
-    const newQuery = Object.assign({}, this.state.query, {query: query})
-    this.setState({query: newQuery});
+  queryChangeHandler(newQueryObj) {
+    const newQuery = Object.assign(
+      {}, this.state.queryObj, newQueryObj
+    )
+    this.setState({queryObj: newQueryObj});
   }
 
   updateMatchResults(props, state) {
     // TODO: Extend searchPapers to deal with query object!
     let newMatchResults = props.searchAuthors(
-      state.query,
+      state.queryObj,
       props.authors,
     );
 
@@ -82,11 +86,13 @@ class SearchableAuthorsList extends React.Component {
   }
 
   render() {
-    const {matchResults, query} = this.state;
+    const {matchResults, queryObj} = this.state;
 
     return (
       <div>
-        <DebouncedTextInput queryChangeHandler={this.queryChangeHandler} query={query.query}/>
+        <DebouncedTextInput
+          queryChangeHandler={this.queryChangeHandler}
+          defaultQuery={queryObj.query}/>
         <AuthorsListPager authors={matchResults}/>
       </div>
     )

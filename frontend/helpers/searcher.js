@@ -1,44 +1,58 @@
 import _ from 'lodash';
 
 export default class Searcher {
-  constructor({fetchNewResults, updateMatchResults}) {
-    this.callbacks = {
+  constructor(options) {
+    const {
+      didMatchResultsChange,
+      didItemsChange,
+      didQueryChange,
       fetchNewResults,
       updateMatchResults,
-    };
+    } = options;
+
+    this.fetchNewResults = fetchNewResults;
+    this.updateMatchResults = updateMatchResults;
+
+    this.didItemsChange = didItemsChange;
+    this.didMatchResultsChange = didMatchResultsChange;
+    this.didQueryChange = didQueryChange;
   }
 
-  componentWillMount(props, state) {
-    this.shouldComponentUpdate({
-      queryDidChange: true,
-      itemsDidChange: true,
-      matchResultsDidChange: true,
-    }, props, state);
+  componentWillMount() {
+    _.delay(() => {
+      this.updateMatchResults();
+      this.fetchNewResults();
+    });
   }
 
-  shouldComponentUpdate(changes, props, state) {
+  componentWillReceiveProps({currentItems, nextItems}) {
+    if (this.didItemsChange(currentItems, nextItems)) {
+      _.delay(() => {
+        this.updateMatchResults();
+      });
+    }
+  }
+
+  setState({currentQuery, newQuery}) {
+    if (this.didQueryChange(currentQuery, newQuery)) {
+      _.delay(() => {
+        this.updateMatchResults();
+        this.fetchNewResults();
+      });
+    }
+  }
+
+  shouldComponentUpdate(params) {
     const {
-      queryDidChange,
-      itemsDidChange,
-      matchResultsDidChange
-    } = changes;
+      currentQuery,
+      currentMatchResults,
+      nextQuery,
+      nextMatchResults,
+    } = params;
 
-    if (queryDidChange) {
-      _.defer(() => {
-        this.callbacks.fetchNewResults(props, state);
-        this.callbacks.updateMatchResults(props, state);
-      });
+    if (this.didQueryChange(currentQuery, nextQuery)) {
       return true;
-    }
-
-    if (itemsDidChange) {
-      _.defer(() => {
-        this.callbacks.updateMatchResults(props, state);
-      });
-      return true;
-    }
-
-    if (matchResultsDidChange) {
+    } else if (this.didMatchResultsChange(currentMatchResults, nextMatchResults)) {
       return true;
     }
 
