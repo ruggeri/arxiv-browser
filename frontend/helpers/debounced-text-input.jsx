@@ -43,7 +43,7 @@ export default class DebouncedTextInput extends React.Component {
     // We will use props.query if nothing has been typed: this way
     // a parent can "initialize" a starting query. This can be helpful
     // if they are restoring a query from persisted state.
-    const query = this.state.query || this.props.query;
+    const query = this.state.query !== null ? this.state.query : this.props.query;
 
     return (
       <div>
