@@ -2,45 +2,29 @@ import classNames from 'classnames';
 import $ from 'jquery';
 import React from 'react';
 
+const SearchStateButton = ({onChange, stateName, value}) => (
+  <label className="form-check-label">
+    <input
+      className="form-check-input"
+      type="checkbox"
+      onChange={onChange}
+      data-state-name={stateName}
+      value={value}/>
+    {stateName}
+  </label>
+)
+
 export default class SearchStateButtons extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.state = {
-      query: {}
+      query: {},
     };
   }
 
-  buttonClassNames() {
-    const {
-      isIgnored,
-      isReviewed,
-      isSavedForLaterReading,
-    } = this.state.query;
-
-    return {
-      isIgnored: classNames({
-        fa: true,
-        "fa-trash": isIgnored,
-        "fa-trash-o": !isIgnored,
-      }),
-
-      isReviewed: classNames({
-        fa: true,
-        "fa-check-square": isReviewed,
-        "fa-check-square-o": !isReviewed,
-      }),
-
-      isSavedForLaterReading: classNames({
-        fa: true,
-        "fa-file-text": isSavedForLaterReading,
-        "fa-file-text-o": !isSavedForLaterReading,
-      }),
-    };
-  }
-
-  handleClick(e) {
+  handleChange(e) {
     const stateName = $(e.currentTarget).data('state-name');
     const query = Object.assign({}, this.state.query);
 
@@ -49,31 +33,26 @@ export default class SearchStateButtons extends React.Component {
   }
 
   render() {
-    const buttonClassNames = this.buttonClassNames();
+    const {query} = this.state;
 
     return (
       <div className="search-state-buttons">
-        <span
-          className="search-state-button"
-          onClick={this.handleClick}
-          data-state-name="isIgnored">
-          <i className={buttonClassNames.isIgnored}/>{' '}
-          <span className="action-name">isIgnored</span>
-        </span>{' '}
-        <span
-          className="search-state-button"
-          onClick={this.handleClick}
-          data-state-name="isReviewed">
-          <i className={buttonClassNames.isReviewed}/>{' '}
-          <span className="action-name">isReviewed</span>
-        </span>{' '}
-        <span
-          className="search-state-button"
-          onClick={this.handleClick}
-          data-state-name="isSavedForLaterReading">
-          <i className={buttonClassNames.isSavedForLaterReading}/>{' '}
-          <span className="action-name">isSavedForLaterReading</span>
-        </span>
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isAwaitingReview"
+          value={query.isAwaitingReview}/>{' '}
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isIgnored"
+          query={query.isIgnored}/>{' '}
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isReviewed"
+          query={query.isReviewed}/>{' '}
+        <SearchStateButton
+          onChange={this.handleChange}
+          stateName="isSavedForLaterReading"
+          query={query.isSavedForLaterReading}/>{' '}
       </div>
     );
   }
