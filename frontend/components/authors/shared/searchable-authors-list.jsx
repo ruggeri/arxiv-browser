@@ -25,6 +25,15 @@ class SearchableAuthorsList extends React.Component {
 
     this.queryChangeHandler = this.queryChangeHandler.bind(this);
     this.searcher = new Searcher({
+      didMatchResultsChange: (oldResults, newResults) => (
+        !oldResults.equals(newResults)
+      ),
+      didItemsChange: (oldItems, newItems) => (
+        !oldItems.equals(newItems)
+      ),
+      didQueryChange: (oldQuery, newQuery) => (
+        !_.isEqual(oldQuery, newQuery)
+      ),
       fetchNewResults: this.fetchNewResults.bind(this),
       updateMatchResults: this.updateMatchResults.bind(this),
     });
@@ -39,27 +48,18 @@ class SearchableAuthorsList extends React.Component {
   }
 
   componentWillMount() {
-    this.searcher.componentWillMount(this.props, this.state);
+    this.searcher.componentWillMount();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const queryDidChange = !_.isEqual(
-      this.state.queryObj, nextState.queryObj
-    );
-    const itemsDidChange = !this.props.authors.equals(nextProps.authors);
-    const matchResultsDidChange = (
-      !this.state.matchResults.equals(nextState.matchResults)
-    );
-
-    return this.searcher.shouldComponentUpdate(
-      {queryDidChange, itemsDidChange, matchResultsDidChange},
-      nextProps,
-      nextState,
-    );
+  componentWillReceiveProps(nextProps) {
+    this.searcher.componentWillReceiveProps({
+      currentItems: this.props.authors,
+      nextItems: nextProps.authors,
+    });
   }
 
-  fetchNewResults(props, state) {
-    props.fetchAuthorQueryResults(state.query);
+  fetchNewResults() {
+    this.props.fetchAuthorQueryResults(this.state.queryObj);
   }
 
   queryChangeHandler(newQueryObj) {
@@ -69,16 +69,34 @@ class SearchableAuthorsList extends React.Component {
     this.setState({queryObj: newQueryObj});
   }
 
-  updateMatchResults(props, state) {
-    // TODO: Extend searchPapers to deal with query object!
-    let newMatchResults = props.searchAuthors(
-      state.queryObj,
-      props.authors,
+  setState(stateUpdate, cb) {
+    const newState = Object.assign({}, this.state, stateUpdate);
+    this.searcher.setState({
+      currentQuery: this.state.queryObj,
+      newQuery: newState.queryObj,
+    });
+
+    super.setState(stateUpdate, cb);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.searcher.shouldComponentUpdate({
+      currentQueryObj: this.state.queryObj,
+      currentMatchResults: this.state.matchResults,
+      nextQueryObj: nextState.queryObj,
+      nextMatchResults: nextState.matchResults,
+    });
+  }
+
+  updateMatchResults() {
+    let newMatchResults = this.props.searchAuthors(
+      this.state.queryObj,
+      this.props.authors,
     );
 
-    if (props.resultsLimit) {
+    if (this.props.resultsLimit) {
       newMatchResults = newMatchResults.take(
-        props.resultsLimit
+        this.props.resultsLimit
       );
     }
 

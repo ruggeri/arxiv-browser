@@ -27,7 +27,6 @@ class SearchablePapersList extends React.Component {
     this.keyHandler = this.keyHandler.bind(this);
     this.queryChangeHandler = this.queryChangeHandler.bind(this);
     this.searcher = new Searcher({
-      fetchNewResults: this.fetchNewResults.bind(this),
       didMatchResultsChange: (oldResults, newResults) => (
         !oldResults.equals(newResults)
       ),
@@ -37,6 +36,7 @@ class SearchablePapersList extends React.Component {
       didQueryChange: (oldQuery, newQuery) => (
         !_.isEqual(oldQuery, newQuery)
       ),
+      fetchNewResults: this.fetchNewResults.bind(this),
       updateMatchResults: this.updateMatchResults.bind(this),
     });
 
@@ -55,6 +55,21 @@ class SearchablePapersList extends React.Component {
     $(document.body).keydown(this.keyHandler);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.searcher.componentWillReceiveProps({
+      currentItems: this.props.papers,
+      nextItems: nextProps.papers
+    });
+  }
+
+  componentWillUnmount() {
+    $(document.body).off('keydown', this.keyHandler);
+  }
+
+  fetchNewResults() {
+    this.props.fetchPaperQueryResults(this.state.queryObj);
+  }
+
   keyHandler(e) {
     e = e.originalEvent;
     if (e.code === 'Escape') {
@@ -67,8 +82,11 @@ class SearchablePapersList extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    $(document.body).off('keydown', this.keyHandler);
+  queryChangeHandler(queryObj) {
+    const newQueryObj = Object.assign(
+      {}, this.state.queryObj, queryObj
+    );
+    this.setState({queryObj: newQueryObj});
   }
 
   setState(stateUpdate, cb) {
@@ -81,13 +99,6 @@ class SearchablePapersList extends React.Component {
     super.setState(stateUpdate, cb);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.searcher.componentWillReceiveProps({
-      currentItems: this.props.papers,
-      nextItems: nextProps.papers
-    });
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     return this.searcher.shouldComponentUpdate({
       currentQueryObj: this.state.queryObj,
@@ -97,19 +108,7 @@ class SearchablePapersList extends React.Component {
     });
   }
 
-  fetchNewResults() {
-    this.props.fetchPaperQueryResults(this.state.queryObj);
-  }
-
-  queryChangeHandler(queryObj) {
-    const newQueryObj = Object.assign(
-      {}, this.state.queryObj, queryObj
-    );
-    this.setState({queryObj: newQueryObj});
-  }
-
   updateMatchResults() {
-    // TODO: Extend searchPapers to deal with query object!
     let newMatchResults = this.props.searchPapers(
       this.state.queryObj,
       this.props.papers,

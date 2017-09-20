@@ -50,7 +50,7 @@ export const searchAuthors = (state, queryObj, authors) => {
       return false;
     }
 
-    if (!query.isAuthorStarred) {
+    if (!queryObj.isAuthorStarred) {
       return true;
     } else {
       return isAuthorStarred(author);
