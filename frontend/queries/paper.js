@@ -35,6 +35,13 @@ export const isPaperIgnored = (state, paperOrId) => {
   return paperStatus && paperStatus.get('state') == 'isIgnored';
 }
 
+export const isReviewed = (state, paperOrId) => {
+  const paperId = _paperId(paperOrId);
+
+  const paperStatus = state.paperStatuses.get(paperId);
+  return paperStatus && paperStatus.get('state') == 'isReviewed';
+}
+
 export const isPaperSavedForLaterReading = (state, paperOrId) => {
   const paperId = _paperId(paperOrId);
 

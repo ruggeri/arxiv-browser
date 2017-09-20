@@ -22,14 +22,10 @@
   @extend .font-weight-bold;
 }
 
-.search-state-buttons {
-  .search-state-button {
-    cursor: pointer;
-  }
+.search-state-button {
+  color: #808080;
 
-  .search-state-button:hover {
-    .action-name {
-      text-decoration: underline;
-    }
+  &.active {
+    color: black;
   }
 }

@@ -15,8 +15,9 @@ class PaperSave extends React.PureComponent {
 
     const savedClassNames = classNames({
       fa: true,
-      "fa-file-text": isSaved,
-      "fa-file-text-o": !isSaved,
+      "fa-file": true,
+      active: isSaved,
+      "search-state-button": true,
     });
 
     return (

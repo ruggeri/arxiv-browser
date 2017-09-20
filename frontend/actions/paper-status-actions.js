@@ -13,7 +13,7 @@ export const togglePaperStar = (paperId) => async (dispatch) => {
 };
 
 
-export const toggleIsSavedForLaterReading = (paperId, state) => async (dispatch) => {
+export const toggleIsSavedForLaterReading = (paperId) => async (dispatch) => {
   const response = await $.ajax({
     url: `/api/papers/${paperId}/paperStatus/toggleState?state=isSavedForLaterReading`,
     method: 'POST',
@@ -22,7 +22,7 @@ export const toggleIsSavedForLaterReading = (paperId, state) => async (dispatch)
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
 
-export const toggleIsIgnored = (paperId, state) => async (dispatch) => {
+export const toggleIsIgnored = (paperId) => async (dispatch) => {
   const response = await $.ajax({
     url: `/api/papers/${paperId}/paperStatus/toggleState?state=isIgnored`,
     method: 'POST',
@@ -30,6 +30,16 @@ export const toggleIsIgnored = (paperId, state) => async (dispatch) => {
 
   dispatch(receivePaperStatuses([response.paperStatus]));
 };
+
+export const toggleIsReviewed = (paperId) => async (dispatch) => {
+  const response = await $.ajax({
+    url: `/api/papers/${paperId}/paperStatus/toggleState?state=isReviewed`,
+    method: 'POST',
+  });
+
+  dispatch(receivePaperStatuses([response.paperStatus]));
+};
+
 
 export const receivePaperStatuses = (paperStatuses) => ({
   type: RECEIVE_PAPER_STATUSES,

@@ -15,8 +15,9 @@ class PaperTrash extends React.PureComponent {
 
     const trashClassNames = classNames({
       fa: true,
-      "fa-trash": isIgnored,
-      "fa-trash-o": !isIgnored,
+      "fa-trash": true,
+      active: isIgnored,
+      "search-state-button": true,
     });
 
     return (

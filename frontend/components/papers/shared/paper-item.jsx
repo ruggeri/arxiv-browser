@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import AuthorsList from 'components/authors/shared/authors-list.jsx';
+import PaperMarkReviewed from 'components/papers/shared/paper-mark-reviewed.jsx';
 import PaperSave from 'components/papers/shared/paper-save.jsx';
 import PaperStar from 'components/papers/shared/paper-star.jsx';
 import PaperTrash from 'components/papers/shared/paper-trash.jsx';
@@ -24,6 +25,7 @@ const PaperTitleRow = ({ isStarred, paper }) => (
       <PaperStar paper={paper}/>{' '}
       <PaperTrash paper={paper}/>{' '}
       <PaperSave paper={paper}/>{' '}
+      <PaperMarkReviewed paper={paper}/>
     </div>
   </div>
 );
