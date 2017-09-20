@@ -13,14 +13,14 @@ class PaperTrash extends React.PureComponent {
       return <i className="fa fa-spinner"></i>;
     }
 
-    const starClassNames = classNames({
+    const trashClassNames = classNames({
       fa: true,
       "fa-trash": isIgnored,
       "fa-trash-o": !isIgnored,
     });
 
     return (
-      <i className={starClassNames} onClick={toggleIsIgnored}></i>
+      <i className={trashClassNames} onClick={toggleIsIgnored}></i>
     );
   }
 }

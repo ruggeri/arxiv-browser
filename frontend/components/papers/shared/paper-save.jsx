@@ -13,14 +13,14 @@ class PaperSave extends React.PureComponent {
       return <i className="fa fa-spinner"></i>;
     }
 
-    const starClassNames = classNames({
+    const savedClassNames = classNames({
       fa: true,
       "fa-file-text": isSaved,
       "fa-file-text-o": !isSaved,
     });
 
     return (
-      <i className={starClassNames} onClick={toggleIsSavedForLaterReading}></i>
+      <i className={savedClassNames} onClick={toggleIsSavedForLaterReading}></i>
     );
   }
 }
