@@ -134,7 +134,9 @@ class SearchablePapersList extends React.Component {
             defaultQuery={queryObj.query}
             ref={(input) => { this.input = input }}
           />
-          <SearchStateButtons/>
+          <SearchStateButtons
+            queryChangeHandler={this.queryChangeHandler}
+          />
         </form>
         <PapersListPager papers={matchResults}/>
       </div>

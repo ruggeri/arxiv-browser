@@ -20,39 +20,51 @@ export default class SearchStateButtons extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.state = {
-      query: {},
+      queryObj: {},
     };
   }
 
   handleChange(e) {
     const stateName = $(e.currentTarget).data('state-name');
-    const query = Object.assign({}, this.state.query);
+    const newQueryObj = Object.assign(
+      {},
+      this.state.queryObj,
+      {[stateName]: !this.state.queryObj[stateName]},
+    );
 
-    query[stateName] = !query[stateName];
-    this.setState({query});
+    this.setState({queryObj: newQueryObj});
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (!_.isEqual(this.state.queryObj, nextState.queryObj)) {
+      this.props.queryChangeHandler(nextState.queryObj)
+      return true;
+    }
+
+    return false;
   }
 
   render() {
-    const {query} = this.state;
+    const {queryObj} = this.state;
 
     return (
       <div className="form-check search-state-checkboxes">
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isAwaitingReview"
-          value={query.isAwaitingReview}/>{' '}
+          value={queryObj.isAwaitingReview}/>{' '}
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isIgnored"
-          query={query.isIgnored}/>{' '}
+          query={queryObj.isIgnored}/>{' '}
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isReviewed"
-          query={query.isReviewed}/>{' '}
+          query={queryObj.isReviewed}/>{' '}
         <SearchStateButton
           onChange={this.handleChange}
           stateName="isSavedForLaterReading"
-          query={query.isSavedForLaterReading}/>{' '}
+          query={queryObj.isSavedForLaterReading}/>{' '}
       </div>
     );
   }
