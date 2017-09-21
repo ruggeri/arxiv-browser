@@ -46,7 +46,7 @@ export const isAuthorStarred = (state, authorOrId) => {
 export const searchAuthors = (state, queryObj, authors) => {
   return authors.filter(author => {
     const nameMatches = (
-      author.get('name').toLowerCase().includes(queryObj.query)
+      author.get('name').toLowerCase().includes(queryObj.query.toLowerCase())
     );
 
     if (!nameMatches) {
